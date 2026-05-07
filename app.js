@@ -3,13 +3,13 @@
 
 // ========== KONFIGURASI GITHUB ==========
 // 🔥 GANTI DENGAN REPO KAMU 🔥
-const GITHUB_USERNAME = "nama-username-github-anda";
-const GITHUB_REPO = "nama-repo-github-anda";
+const GITHUB_USERNAME = "friscoregaza";
+const GITHUB_REPO = "PJBL";
 const GITHUB_BRANCH = "main";
 const JSON_FILE_PATH = "database.json";
 
 // Personal Access Token (dibuat di GitHub Settings)
-const GITHUB_TOKEN = "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+const GITHUB_TOKEN = "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";
 
 // ========== GLOBAL VARIABLES ==========
 let currentUser = null;
