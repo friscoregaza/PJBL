@@ -2,182 +2,2186 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamified Finance - Cloud Database</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Gamified Finance | Level Up Your Money</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- ApexCharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <!-- SheetJS untuk Excel -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    
+    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.3s; }
-        
-        /* Dark Mode */
-        body.dark { background: radial-gradient(circle at 10% 20%, #0a0f1e, #050811); color: #e2e8f0; }
-        body.dark .card { background: rgba(10, 20, 40, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 24px; transition: all 0.2s; }
-        body.dark .card:hover { border-color: rgba(139, 92, 246, 0.6); transform: translateY(-2px); }
-        body.dark .menu-item.active { background: rgba(139, 92, 246, 0.2); border-left: 3px solid #8b5cf6; color: #c084fc; }
-        body.dark .menu-item:hover:not(.active) { background: rgba(139, 92, 246, 0.1); transform: translateX(5px); }
-        
-        /* Light Mode */
-        body.light { background: linear-gradient(135deg, #f0f9ff, #e0f2fe, #fae8ff); color: #1e293b; }
-        body.light .card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 24px; }
-        body.light .menu-item.active { background: rgba(139, 92, 246, 0.15); border-left: 3px solid #8b5cf6; color: #5b21b6; }
-        body.light input, body.light select { background: rgba(0,0,0,0.05); border-color: rgba(139,92,246,0.3); color: #1e293b; }
-        
-        .menu-item { cursor: pointer; transition: all 0.2s; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
-        .page { display: none; }
-        .page.active { display: block; }
-        .notification { position: fixed; top: 20px; right: 20px; z-index: 1000; padding: 12px 20px; border-radius: 12px; animation: slideIn 0.3s ease; background: #1e293b; border-left: 5px solid #8b5cf6; color: white; }
-        .notification.success { border-left-color: #22c55e; background: #14532d; }
-        .notification.error { border-left-color: #ef4444; background: #7f1d1d; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .badge-cat { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
-        body.dark .badge-cat.income { background: #1e3a5f; color: #bae6fd; }
-        body.dark .badge-cat.expense { background: #6b21a5; color: #e9d5ff; }
-        body.light .badge-cat.income { background: #3b82f6; color: white; }
-        body.light .badge-cat.expense { background: #a855f7; color: white; }
-        .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 998; }
-        .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999; width: 90%; max-width: 450px; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #1e1e2e; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Urbanist', sans-serif;
+        }
+
+        body.theme-dark {
+            background: radial-gradient(circle at 10% 20%, #0a0f1e, #050811);
+            color: #e2e8f0;
+        }
+
+        body.theme-dark .glass-card {
+            background: rgba(5, 10, 25, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 24px;
+            transition: all 0.2s;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+        }
+
+        body.theme-dark .glass-card:hover {
+            border-color: rgba(139, 92, 246, 0.8);
+        }
+
+        body.theme-dark .menu-item.active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.1));
+            border-left: 3px solid #8b5cf6;
+            color: #c084fc;
+        }
+
+        body.theme-dark .menu-item:hover:not(.active) {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        body.theme-light {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #fae8ff 100%);
+            color: #1e293b;
+        }
+
+        body.theme-light .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        body.theme-light .menu-item.active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.1));
+            border-left: 3px solid #8b5cf6;
+            color: #5b21b6;
+        }
+
+        body.theme-light input, body.theme-light select {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(139, 92, 246, 0.3);
+            color: #1e293b;
+        }
+
+        .badge-kategori {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        body.theme-dark .badge-kategori.kebutuhan-pokok { background: #854d0e; color: #fef08a; }
+        body.theme-dark .badge-kategori.belanja { background: #9a3412; color: #fed7aa; }
+        body.theme-dark .badge-kategori.healing { background: #6b21a5; color: #e9d5ff; }
+        body.theme-dark .badge-kategori.penghasilan { background: #1e3a5f; color: #bae6fd; }
+        body.theme-dark .badge-kategori.transport { background: #14532d; color: #bbf7d0; }
+
+        body.theme-light .badge-kategori.kebutuhan-pokok { background: #eab308; color: #1e293b; }
+        body.theme-light .badge-kategori.belanja { background: #f97316; color: white; }
+        body.theme-light .badge-kategori.healing { background: #a855f7; color: white; }
+        body.theme-light .badge-kategori.penghasilan { background: #3b82f6; color: white; }
+        body.theme-light .badge-kategori.transport { background: #22c55e; color: white; }
+
+        .achievement-bar-bg {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b, #d97706);
+            border-radius: 30px;
+            transition: width 0.5s ease;
+        }
+
+        .level-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+        }
+
+        .achievement-float {
+            position: fixed;
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-50px) scale(1.2); }
+        }
+
+        .notification {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-left: 5px solid #8b5cf6;
+            border-radius: 16px;
+            padding: 14px 22px;
+            width: 100%;
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.4);
+            animation: slideDown 0.35s ease forwards;
+            backdrop-filter: blur(12px);
+            pointer-events: auto;
+        }
+
+        body.theme-light .notification {
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+        }
+
+        .notification.success { border-left-color: #22c55e; background: linear-gradient(135deg, #14532d, #064e3b); }
+        .notification.warning { border-left-color: #f59e0b; background: linear-gradient(135deg, #451a03, #422006); }
+        .notification.error { border-left-color: #ef4444; background: linear-gradient(135deg, #7f1d1d, #450a0a); }
+        .notification.achievement {
+            border-left-color: #f59e0b;
+            background: linear-gradient(135deg, #451a03, #422006);
+            animation: slideDown 0.35s ease, pulse 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100%) scale(0.9); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100%) scale(0.9); opacity: 0; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .notification.hide {
+            animation: slideUp 0.3s ease forwards;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .notification-icon { font-size: 1.6rem; }
+        .notification-message { flex: 1; }
+        .notification-title { font-weight: bold; font-size: 1rem; margin-bottom: 4px; }
+        .notification-desc { font-size: 0.85rem; opacity: 0.9; }
+
+        .menu-item {
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 12px;
+        }
+
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3);
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 10px; }
-        .level-badge { background: linear-gradient(135deg, #fbbf24, #f59e0b); border-radius: 20px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
-        .achievement-bar { background: linear-gradient(90deg, #fbbf24, #f59e0b, #d97706); border-radius: 30px; height: 8px; transition: width 0.5s; }
+
+        .page-content {
+            display: block;
+            width: 100%;
+        }
+
+        .page-content.hidden {
+            display: none !important;
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            #pageLaporan, #pageLaporan * { visibility: visible; }
+            #pageLaporan { position: absolute; top: 0; left: 0; width: 100%; }
+        }
+
+        button, .menu-item, .glass-card {
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        button:active, .menu-item:active {
+            transform: scale(0.97);
+        }
     </style>
 </head>
-<body class="dark">
+<body class="theme-dark">
 
-<div id="notifContainer" style="position:fixed; top:20px; right:20px; z-index:1000;"></div>
+    <div id="notificationContainer" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-3 pointer-events-none" style="min-width: 320px; max-width: 450px;"></div>
 
-<!-- LOGIN PAGE -->
-<div id="loginPage" class="page active">
-    <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="card w-full max-w-md p-8">
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden">
+        <div class="text-center">
+            <i class="fas fa-spinner fa-spin text-4xl text-purple-400 mb-4"></i>
+            <p class="text-white">Memuat data...</p>
+        </div>
+    </div>
+
+    <!-- Login Container -->
+    <div id="loginContainer" class="min-h-screen flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-8">
             <div class="text-center mb-6">
-                <i class="fas fa-cloud-upload-alt text-5xl text-purple-400"></i>
-                <h2 class="text-2xl font-bold mt-3 gradient-text">Gamified Finance</h2>
-                <p class="text-gray-400 text-sm">Cloud Database | Akses dari Mana Saja</p>
+                <i class="fas fa-gamepad text-5xl text-purple-400"></i>
+                <h2 class="text-2xl font-bold mt-3 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Gamified Finance</h2>
+                <p class="text-gray-400 text-sm">Nabung = Dapat Achievement</p>
             </div>
+            
             <div class="flex border-b border-purple-500/30 mb-6">
-                <button id="loginTabBtn" class="flex-1 py-2 text-center font-semibold text-purple-400 border-b-2 border-purple-400">Login</button>
-                <button id="registerTabBtn" class="flex-1 py-2 text-center font-semibold text-gray-400">Register</button>
+                <button id="loginTab" class="flex-1 py-2 text-center font-semibold text-purple-400 border-b-2 border-purple-400 transition">Login</button>
+                <button id="registerTab" class="flex-1 py-2 text-center font-semibold text-gray-400 hover:text-purple-400 transition">Register</button>
             </div>
+            
             <form id="loginForm">
-                <div class="mb-4"><input type="text" id="loginUsername" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Username" required></div>
-                <div class="mb-6"><input type="password" id="loginPassword" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Password" required></div>
-                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 py-2.5 rounded-xl font-semibold">Login</button>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium">Username</label>
+                    <input type="text" id="loginUsername" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Masukkan username" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium">Password</label>
+                    <input type="password" id="loginPassword" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="*****" required>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 py-2.5 rounded-xl font-semibold transition">Mulai Petualangan</button>
+                <div id="loginError" class="text-red-400 text-center mt-3 text-sm"></div>
             </form>
+            
             <form id="registerForm" class="hidden">
-                <div class="mb-3"><input type="text" id="regFullname" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Nama Lengkap" required></div>
-                <div class="mb-3"><input type="text" id="regUsername" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Username" required></div>
-                <div class="mb-3"><input type="email" id="regEmail" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Email" required></div>
-                <div class="mb-3"><input type="password" id="regPassword" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Password (min.6)" required></div>
-                <div class="mb-5"><input type="password" id="regConfirm" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Konfirmasi Password" required></div>
-                <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 py-2.5 rounded-xl font-semibold">Daftar</button>
+                <div class="mb-3">
+                    <label class="block text-sm font-medium">Nama Lengkap</label>
+                    <input type="text" id="regFullname" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Nama lengkap" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm font-medium">Username</label>
+                    <input type="text" id="regUsername" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Username unik" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm font-medium">Email</label>
+                    <input type="email" id="regEmail" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="email@example.com" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm font-medium">Password</label>
+                    <input type="password" id="regPassword" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Minimal 6 karakter" required>
+                </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-medium">Konfirmasi Password</label>
+                    <input type="password" id="regConfirmPassword" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Ulangi password" required>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 py-2.5 rounded-xl font-semibold transition">Daftar Sekarang</button>
+                <div id="registerError" class="text-red-400 text-center mt-3 text-sm"></div>
             </form>
         </div>
     </div>
-</div>
 
-<!-- DASHBOARD PAGE -->
-<div id="dashboardPage" class="page" style="display:none">
-    <div class="flex min-h-screen">
-        <!-- SIDEBAR -->
-        <div class="fixed left-0 top-0 h-full w-64 card rounded-none border-l-0 border-t-0 border-b-0 z-20 hidden lg:block overflow-y-auto">
-            <div class="p-6">
-                <div class="flex items-center gap-3 mb-8"><i class="fas fa-trophy text-3xl text-yellow-400"></i><span class="text-xl font-bold">Game<span class="text-purple-400">Finance</span></span></div>
-                <div class="mb-6 pb-4 border-b border-white/10">
-                    <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center"><i class="fas fa-user text-white"></i></div><div><p id="sidebarName" class="font-semibold">User</p><p id="sidebarEmail" class="text-xs text-gray-400">email</p></div></div>
+    <!-- Dashboard Container -->
+    <div id="dashboardContainer" class="hidden min-h-screen">
+        <aside class="fixed left-0 top-0 h-full w-72 glass-card rounded-none border-l-0 border-t-0 border-b-0 z-20 hidden lg:block overflow-y-auto">
+            <div class="p-6 flex flex-col h-full">
+                <div class="flex items-center gap-3 mb-8">
+                    <i class="fas fa-trophy text-3xl text-yellow-400"></i>
+                    <span class="text-xl font-bold">Game<span class="text-purple-400">Finance</span></span>
                 </div>
-                <nav>
-                    <div class="menu-item active" data-page="dashboard"><i class="fas fa-home w-5"></i><span>Dashboard</span></div>
-                    <div class="menu-item" data-page="daily"><i class="fas fa-calendar-day w-5"></i><span>Daily Login</span></div>
-                    <div class="menu-item" data-page="analytics"><i class="fas fa-chart-line w-5"></i><span>Analytics</span></div>
-                    <div class="menu-item" data-page="laporan"><i class="fas fa-file-invoice-dollar w-5"></i><span>Laporan</span></div>
-                    <div class="menu-item" data-page="achievement"><i class="fas fa-medal w-5"></i><span>Achievement</span></div>
-                    <div class="menu-item" data-page="settings"><i class="fas fa-cog w-5"></i><span>Settings</span></div>
+                
+                <div class="mb-6 pb-4 border-b border-white/10">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                            <i class="fas fa-user text-white text-xl"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            <p class="font-semibold truncate" id="sidebarUsername">User</p>
+                            <p class="text-xs text-gray-400 truncate" id="sidebarEmail">email@example.com</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <nav class="space-y-2 flex-1">
+                    <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition cursor-pointer" data-page="dashboard">
+                        <i class="fas fa-home w-5"></i><span>Dashboard</span>
+                    </div>
+                    <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition cursor-pointer" data-page="daily">
+                        <i class="fas fa-calendar-day w-5"></i><span>Daily Login</span>
+                    </div>
+                    <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition cursor-pointer" data-page="analytics">
+                        <i class="fas fa-chart-line w-5"></i><span>Analytics</span>
+                    </div>
+                    <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition cursor-pointer" data-page="laporan">
+                        <i class="fas fa-file-invoice-dollar w-5"></i><span>Laporan</span>
+                    </div>
+                    <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition cursor-pointer" data-page="achievement">
+                        <i class="fas fa-medal w-5"></i><span>Achievement</span>
+                    </div>
+                    <div class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition cursor-pointer" data-page="settings">
+                        <i class="fas fa-cog w-5"></i><span>Settings</span>
+                    </div>
                 </nav>
-                <div class="mt-8 pt-4 border-t border-white/10">
-                    <button id="themeBtn" class="flex items-center gap-3 text-gray-400 hover:text-white w-full px-4 py-2 rounded-xl hover:bg-white/10 mb-2"><i class="fas fa-moon"></i> <span id="themeText">Dark Mode</span></button>
-                    <button id="logoutBtn" class="flex items-center gap-3 text-gray-400 hover:text-red-400 w-full px-4 py-2 rounded-xl hover:bg-red-500/20"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                
+                <div class="mt-auto pt-4 border-t border-white/10">
+                    <button id="themeToggle" class="flex items-center gap-3 text-gray-400 hover:text-white w-full px-4 py-2 rounded-xl hover:bg-white/10 transition mb-2">
+                        <i class="fas fa-moon w-5"></i> <span id="themeText">Dark Mode</span>
+                    </button>
+                    <button id="logoutBtnSide" class="flex items-center gap-3 text-gray-400 hover:text-red-400 w-full px-4 py-2 rounded-xl hover:bg-red-500/20 transition">
+                        <i class="fas fa-sign-out-alt w-5"></i> Logout
+                    </button>
                 </div>
             </div>
-        </div>
+        </aside>
 
-        <!-- MAIN -->
-        <div class="lg:ml-64 flex-1 p-5">
-            <!-- DASHBOARD CONTENT -->
-            <div id="dashboardContent" class="page-content" style="display:block">
-                <div class="card p-5 mb-6" id="playerCard"></div>
-                <div class="card p-5 mb-6" id="dailyCard"></div>
+        <main class="lg:ml-72 p-5 md:p-7 overflow-y-auto" style="height: 100vh; overflow-y: auto;">
+            
+            <div id="pageDashboard" class="page-content">
+                <div class="glass-card p-5 mb-6" id="playerAchievementCard"></div>
+                <div class="glass-card p-5 mb-6" id="dailyLoginContainer"></div>
 
-                <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
-                    <h1 class="text-2xl font-bold">Dompet Petualang</h1>
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-3">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-wallet text-3xl text-purple-400"></i>
+                        <h1 class="text-2xl font-bold">Dompet Petualang</h1>
+                    </div>
                     <div class="flex gap-3">
-                        <select id="exportFormat" class="bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2 text-sm"><option value="json">JSON</option><option value="csv">CSV</option></select>
-                        <button id="exportBtn" class="card px-4 py-2 rounded-xl text-sm">Export</button>
-                        <button id="importBtn" class="card px-4 py-2 rounded-xl text-sm">Import</button>
-                        <input type="file" id="importFile" style="display:none" accept=".json">
+                        <select id="formatFile" class="glass-card px-4 py-2 rounded-xl text-sm border border-purple-500/30">
+                            <option value="json">JSON</option>
+                            <option value="csv">CSV</option>
+                            <option value="txt">TXT</option>
+                            <option value="excel">Excel</option>
+                        </select>
+                        <button id="exportDataBtn" class="glass-card px-4 py-2 rounded-xl text-sm flex items-center gap-2 hover:bg-white/10">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button id="importDataBtn" class="glass-card px-4 py-2 rounded-xl text-sm flex items-center gap-2 hover:bg-white/10">
+                            <i class="fas fa-upload"></i> Import
+                        </button>
+                        <input type="file" id="importFileInput" style="display:none" accept=".json,.txt,.xlsx,.xls,.csv">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-5 mb-8">
-                    <div class="card p-5"><p class="text-gray-400 text-sm">Total Pemasukan</p><p class="text-2xl font-bold text-emerald-400" id="totalIncome">Rp 0</p></div>
-                    <div class="card p-5"><p class="text-gray-400 text-sm">Total Pengeluaran</p><p class="text-2xl font-bold text-rose-400" id="totalExpense">Rp 0</p></div>
-                    <div class="card p-5"><p class="text-gray-400 text-sm">Saldo Akhir</p><p class="text-2xl font-bold text-sky-400" id="totalBalance">Rp 0</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+                    <div class="glass-card p-5">
+                        <p class="text-gray-400 text-sm">Total Pemasukan</p>
+                        <p class="text-2xl font-bold text-emerald-400" id="totalPemasukan">Rp 0</p>
+                        <div id="sparkIncome" class="mt-3 h-12"></div>
+                    </div>
+                    <div class="glass-card p-5">
+                        <p class="text-gray-400 text-sm">Total Pengeluaran</p>
+                        <p class="text-2xl font-bold text-rose-400" id="totalPengeluaran">Rp 0</p>
+                        <div id="sparkExpense" class="mt-3 h-12"></div>
+                    </div>
+                    <div class="glass-card p-5">
+                        <p class="text-gray-400 text-sm">Saldo Akhir</p>
+                        <p class="text-2xl font-bold text-sky-400" id="saldoAkhir">Rp 0</p>
+                        <div id="sparkBalance" class="mt-3 h-12"></div>
+                    </div>
                 </div>
 
-                <div class="flex gap-3 mb-4">
-                    <input type="text" id="searchInput" placeholder="Cari..." class="bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2 text-sm w-48">
-                    <button id="addTransBtn" class="bg-gradient-to-r from-purple-600 to-pink-600 px-5 py-2 rounded-xl">+ Transaksi</button>
+                <div class="glass-card p-5 mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold">Perkembangan Saldo</h3>
+                        <select id="filterWaktu" class="bg-black/30 border border-purple-500/30 rounded-lg px-3 py-1.5 text-sm">
+                            <option value="week">Minggu Ini</option>
+                            <option value="month">Bulan Ini</option>
+                            <option value="all">Semua Waktu</option>
+                        </select>
+                    </div>
+                    <div id="lineChart"></div>
                 </div>
 
-                <div class="card overflow-hidden">
-                    <table class="w-full text-sm"><thead class="bg-black/40"><tr><th class="p-3">Tanggal</th><th class="p-3">Deskripsi</th><th class="p-3">Kategori</th><th class="p-3">Jenis</th><th class="p-3">Jumlah</th><th class="p-3">Aksi</th></tr></thead><tbody id="transTable"></tbody></table>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div class="glass-card p-5">
+                        <h3 class="font-semibold mb-3">Top Kategori Pengeluaran</h3>
+                        <div id="barChart"></div>
+                    </div>
+                    <div class="glass-card p-5">
+                        <h3 class="font-semibold mb-3">Komposisi Pengeluaran</h3>
+                        <div id="pieChart"></div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 mb-6 flex flex-wrap gap-4 items-center justify-between">
+                    <div class="flex flex-wrap gap-3">
+                        <input type="text" id="searchInput" placeholder="Cari deskripsi..." class="bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2 text-sm w-48">
+                        <select id="filterKategori" class="bg-black/30 border border-purple-500/30 rounded-xl px-3 py-2 text-sm">
+                            <option value="semua">Semua Kategori</option>
+                        </select>
+                        <select id="filterJenis" class="bg-black/30 border border-purple-500/30 rounded-xl px-3 py-2 text-sm">
+                            <option value="semua">Semua Jenis</option>
+                            <option value="pemasukan">Pemasukan</option>
+                            <option value="pengeluaran">Pengeluaran</option>
+                        </select>
+                    </div>
+                    <button id="tambahBtn" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 px-5 py-2 rounded-xl flex items-center gap-2 transition">
+                        <i class="fas fa-plus"></i> Transaksi Baru
+                    </button>
+                </div>
+
+                <div class="glass-card overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-black/40 border-b border-white/10">
+                                <tr class="text-gray-300">
+                                    <th class="p-4 text-left">Tanggal</th>
+                                    <th class="p-4 text-left">Deskripsi</th>
+                                    <th class="p-4 text-left">Kategori</th>
+                                    <th class="p-4 text-left">Jenis</th>
+                                    <th class="p-4 text-right">Jumlah</th>
+                                    <th class="p-4 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transaksiTableBody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- DAILY LOGIN CONTENT -->
-            <div id="dailyContent" class="page-content" style="display:none">
-                <div class="card p-6"><div id="dailyDetail"></div></div>
+            <div id="pageDaily" class="page-content hidden">
+                <div class="flex items-center gap-3 mb-6">
+                    <i class="fas fa-calendar-day text-3xl text-yellow-400"></i>
+                    <h1 class="text-2xl font-bold">Daily Login Reward</h1>
+                </div>
+                <div class="glass-card p-6 mb-6">
+                    <div id="dailyLoginDetailContainer"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-card p-6">
+                        <h3 class="font-semibold text-lg mb-4">Reward Streak</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 1-2</span><span class="text-emerald-400">+5 Points</span></div>
+                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 3-6</span><span class="text-emerald-400">+10 Points</span></div>
+                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 7-13</span><span class="text-emerald-400">+15 Points</span></div>
+                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 14-29</span><span class="text-emerald-400">+25 Points</span></div>
+                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 30+</span><span class="text-emerald-400">+50 Points</span></div>
+                        </div>
+                    </div>
+                    <div class="glass-card p-6">
+                        <h3 class="font-semibold text-lg mb-4">Badge Streak</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>7 Hari Streak</span><span class="text-yellow-400">Badge Khusus</span></div>
+                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>30 Hari Streak</span><span class="text-yellow-400">Badge Khusus</span></div>
+                        </div>
+                        <div class="mt-4 p-3 bg-amber-500/10 rounded-lg border border-amber-500/30">
+                            <p class="text-sm text-amber-400">Login setiap hari untuk menjaga streak!</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- ANALYTICS CONTENT -->
-            <div id="analyticsContent" class="page-content" style="display:none"><div class="card p-5">Analytics (coming soon)</div></div>
+            <div id="pageAnalytics" class="page-content hidden">
+                <div class="flex items-center gap-5 mb-6">
+                    <i class="fas fa-chart-pie text-3xl text-purple-400"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Analytics Keuangan</h1>
+                        <p class="text-gray-400">Wawasan dari data transaksi Anda</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+                    <div class="glass-card p-5"><h3 class="font-semibold">Pengeluaran Terbesar</h3><p class="text-lg mt-2" id="insightTopCatText">-</p></div>
+                    <div class="glass-card p-5"><h3 class="font-semibold">Tren Pengeluaran</h3><p class="text-lg mt-2" id="insightTrendText">-</p></div>
+                    <div class="glass-card p-5"><h3 class="font-semibold">Status Keuangan</h3><p class="text-lg mt-2" id="insightBorosText">-</p></div>
+                    <div class="glass-card p-5"><h3 class="font-semibold">Saran Cerdas</h3><p class="text-lg mt-2" id="insightSaranText">-</p></div>
+                </div>
+                
+                <div class="glass-card p-5 mb-8">
+                    <h3 class="font-semibold mb-3">Distribusi Pengeluaran per Kategori</h3>
+                    <div id="analyticsPieChart" style="height: 350px;"></div>
+                </div>
+                
+                <div class="glass-card p-5 mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold">Perbandingan Pemasukan & Pengeluaran</h3>
+                        <select id="analyticsTimeRange" class="bg-black/30 border border-purple-500/30 rounded-lg px-3 py-1.5 text-sm">
+                            <option value="week">Minggu Ini</option>
+                            <option value="month">Bulan Ini</option>
+                            <option value="all">Semua Waktu</option>
+                        </select>
+                    </div>
+                    <div id="analyticsBarChart" style="height: 350px;"></div>
+                </div>
+                
+                <div class="glass-card p-5">
+                    <h3 class="font-semibold mb-3">Alokasi Keuangan (50/30/20)</h3>
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div><div class="text-2xl font-bold text-emerald-400" id="pctKebutuhan">0%</div><div class="text-xs">Kebutuhan</div></div>
+                        <div><div class="text-2xl font-bold text-yellow-400" id="pctKeinginan">0%</div><div class="text-xs">Keinginan</div></div>
+                        <div><div class="text-2xl font-bold text-sky-400" id="pctTabungan">0%</div><div class="text-xs">Tabungan</div></div>
+                    </div>
+                    <div class="mt-3 h-2 bg-gray-700 rounded-full overflow-hidden flex">
+                        <div id="barKebutuhan" class="bg-emerald-400 h-full" style="width:0%"></div>
+                        <div id="barKeinginan" class="bg-yellow-400 h-full" style="width:0%"></div>
+                        <div id="barTabungan" class="bg-sky-400 h-full" style="width:0%"></div>
+                    </div>
+                </div>
+            </div>
 
-            <!-- LAPORAN CONTENT -->
-            <div id="laporanContent" class="page-content" style="display:none"><div class="card p-5">Laporan (coming soon)</div></div>
+            <div id="pageLaporan" class="page-content hidden">
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-3">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-file-invoice-dollar text-3xl text-purple-400"></i>
+                        <h1 class="text-2xl font-bold">Laporan Transaksi</h1>
+                    </div>
+                    <div class="flex gap-3">
+                        <button id="printLaporanBtn" class="glass-card px-4 py-2 rounded-xl text-sm flex items-center gap-2">Print</button>
+                        <button id="exportLaporanCSV" class="glass-card px-4 py-2 rounded-xl text-sm flex items-center gap-2">Export CSV</button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="glass-card p-4"><p class="text-gray-400 text-sm">Total Pemasukan</p><p class="text-xl font-bold text-emerald-400" id="laporanTotalPemasukan">Rp 0</p></div>
+                    <div class="glass-card p-4"><p class="text-gray-400 text-sm">Total Pengeluaran</p><p class="text-xl font-bold text-rose-400" id="laporanTotalPengeluaran">Rp 0</p></div>
+                    <div class="glass-card p-4"><p class="text-gray-400 text-sm">Saldo Akhir</p><p class="text-xl font-bold text-sky-400" id="laporanSaldo">Rp 0</p></div>
+                </div>
+                
+                <div class="glass-card p-4 mb-6 flex flex-wrap gap-4 items-end">
+                    <div><label class="block text-xs text-gray-400">Dari Tanggal</label><input type="date" id="laporanStartDate" class="bg-black/30 border border-purple-500/30 rounded-lg px-3 py-1.5"></div>
+                    <div><label class="block text-xs text-gray-400">Sampai Tanggal</label><input type="date" id="laporanEndDate" class="bg-black/30 border border-purple-500/30 rounded-lg px-3 py-1.5"></div>
+                    <div><label class="block text-xs text-gray-400">Kategori</label><select id="laporanFilterKategori" class="bg-black/30 border border-purple-500/30 rounded-lg px-3 py-1.5"><option value="semua">Semua</option></select></div>
+                    <div><label class="block text-xs text-gray-400">Jenis</label><select id="laporanFilterJenis" class="bg-black/30 border border-purple-500/30 rounded-lg px-3 py-1.5"><option value="semua">Semua</option><option value="pemasukan">Pemasukan</option><option value="pengeluaran">Pengeluaran</option></select></div>
+                    <button id="resetLaporanFilter" class="bg-purple-700 px-4 py-1.5 rounded-lg text-sm">Reset Filter</button>
+                </div>
+                
+                <div class="glass-card overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-black/40 border-b border-white/10">
+                                <tr><th class="p-3 text-left">Tanggal</th><th class="p-3 text-left">Deskripsi</th><th class="p-3 text-left">Kategori</th><th class="p-3 text-left">Jenis</th><th class="p-3 text-right">Jumlah</th></tr>
+                            </thead>
+                            <tbody id="laporanTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-            <!-- ACHIEVEMENT CONTENT -->
-            <div id="achievementContent" class="page-content" style="display:none"><div class="card p-5"><div id="badgeList"></div></div></div>
+            <div id="pageAchievement" class="page-content hidden">
+                <div class="flex items-center gap-3 mb-6">
+                    <i class="fas fa-medal text-3xl text-yellow-400"></i>
+                    <h1 class="text-2xl font-bold">Achievement & Badge</h1>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="badgeContainer"></div>
+            </div>
 
-            <!-- SETTINGS CONTENT -->
-            <div id="settingsContent" class="page-content" style="display:none"><div class="card p-6"><button id="resetDataBtn" class="bg-red-600 px-5 py-2 rounded-xl">Reset Semua Data</button></div></div>
+            <div id="pageSettings" class="page-content hidden">
+                <div class="flex items-center gap-3 mb-6">
+                    <i class="fas fa-cog text-3xl text-purple-400"></i>
+                    <h1 class="text-2xl font-bold">Pengaturan</h1>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-card p-6">
+                        <h2 class="text-xl font-semibold mb-4">Reset Data</h2>
+                        <p class="text-gray-400 text-sm mb-4">Reset semua data ke kondisi awal</p>
+                        <div class="flex gap-3">
+                            <button id="resetAllDataBtn" class="bg-red-600 hover:bg-red-700 px-5 py-2.5 rounded-xl">Reset Semua</button>
+                            <button id="resetTransaksiOnlyBtn" class="bg-orange-600 hover:bg-orange-700 px-5 py-2.5 rounded-xl">Reset Transaksi</button>
+                        </div>
+                    </div>
+                    <div class="glass-card p-6">
+                        <h2 class="text-xl font-semibold mb-4">Informasi</h2>
+                        <div class="space-y-2 text-sm">
+                            <p><strong>Gamified Finance</strong> v4.0</p>
+                            <p>Data tersimpan di MockAPI Cloud</p>
+                            <p>Import: JSON, Excel, CSV, TXT</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="transaksiModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+        <div class="absolute inset-0 modal-backdrop" id="modalBackdrop"></div>
+        <div class="glass-card w-full max-w-md mx-4 p-6 relative z-10">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalTitle" class="text-xl font-bold">Tambah Transaksi</h3>
+                <button id="closeModalBtn" class="text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="transaksiForm">
+                <input type="hidden" id="editId">
+                <div class="mb-3"><label class="block text-sm mb-1">Tanggal</label><input type="date" id="tanggal" class="w-full bg-black/40 border border-purple-500/30 rounded-lg px-3 py-2" required></div>
+                <div class="mb-3"><label class="block text-sm mb-1">Deskripsi</label><input type="text" id="deskripsi" class="w-full bg-black/40 border border-purple-500/30 rounded-lg px-3 py-2" required></div>
+                <div class="mb-3"><label class="block text-sm mb-1">Kategori</label><select id="kategori" class="w-full bg-black/40 border border-purple-500/30 rounded-lg px-3 py-2">
+                    <option value="Kebutuhan Pokok">Kebutuhan Pokok</option>
+                    <option value="Belanja">Belanja</option>
+                    <option value="Healing">Healing</option>
+                    <option value="Penghasilan">Penghasilan</option>
+                    <option value="Transport">Transport</option>
+                </select></div>
+                <div class="mb-3"><label class="block text-sm mb-1">Jenis</label><select id="jenis" class="w-full bg-black/40 border border-purple-500/30 rounded-lg px-3 py-2">
+                    <option value="pemasukan">Pemasukan</option>
+                    <option value="pengeluaran">Pengeluaran</option>
+                </select></div>
+                <div class="mb-4"><label class="block text-sm mb-1">Jumlah (Rp)</label><input type="number" id="jumlah" class="w-full bg-black/40 border border-purple-500/30 rounded-lg px-3 py-2" required></div>
+                <button type="button" id="saveBtn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 py-2 rounded-xl font-semibold transition">Simpan</button>
+            </form>
         </div>
     </div>
-</div>
 
-<!-- MODAL TRANSACTION -->
-<div id="transModal" style="display:none; position:fixed; inset:0; z-index:1000;">
-    <div class="modal-backdrop" id="modalBackdrop"></div>
-    <div class="modal card p-6">
-        <h3 id="modalTitle" class="text-xl font-bold mb-4">Tambah Transaksi</h3>
-        <form id="transForm">
-            <input type="hidden" id="editId">
-            <div class="mb-3"><input type="date" id="transDate" class="w-full bg-black/30 border rounded-lg px-3 py-2" required></div>
-            <div class="mb-3"><input type="text" id="transDesc" placeholder="Deskripsi" class="w-full bg-black/30 border rounded-lg px-3 py-2" required></div>
-            <div class="mb-3"><select id="transCat" class="w-full bg-black/30 border rounded-lg px-3 py-2"><option>Kebutuhan Pokok</option><option>Belanja</option><option>Healing</option><option>Penghasilan</option><option>Transport</option></select></div>
-            <div class="mb-3"><select id="transType" class="w-full bg-black/30 border rounded-lg px-3 py-2"><option value="pemasukan">Pemasukan</option><option value="pengeluaran">Pengeluaran</option></select></div>
-            <div class="mb-4"><input type="number" id="transAmount" placeholder="Jumlah" class="w-full bg-black/30 border rounded-lg px-3 py-2" required></div>
-            <button type="button" id="saveTransBtn" class="w-full bg-purple-600 py-2 rounded-xl font-semibold mb-2">Simpan</button>
-            <button type="button" id="closeModalBtn" class="w-full bg-gray-600 py-2 rounded-xl">Batal</button>
-        </form>
+    <div id="confirmModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+        <div class="absolute inset-0 modal-backdrop" id="confirmBackdrop"></div>
+        <div class="glass-card w-full max-w-md mx-4 p-6 relative z-10">
+            <div class="text-center mb-4">
+                <i class="fas fa-question-circle text-5xl text-yellow-400 mb-3"></i>
+                <h3 id="confirmTitle" class="text-xl font-bold">Konfirmasi</h3>
+                <p id="confirmMessage" class="text-gray-400 mt-2">Apakah Anda yakin?</p>
+            </div>
+            <div class="flex gap-3">
+                <button id="confirmCancelBtn" class="flex-1 bg-gray-600 hover:bg-gray-700 py-2 rounded-xl">Batal</button>
+                <button id="confirmOkBtn" class="flex-1 bg-red-600 hover:bg-red-700 py-2 rounded-xl">Ya, Reset!</button>
+            </div>
+        </div>
     </div>
-</div>
 
-<script src="app.js"></script>
+    <audio id="soundSuccess" preload="auto"><source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+    <audio id="soundLevelUp" preload="auto"><source src="https://www.soundjay.com/misc/sounds/fanfare-6.mp3"></audio>
+    <audio id="soundNotification" preload="auto"><source src="https://www.soundjay.com/misc/sounds/notification-3.mp3"></audio>
+
+    <script>
+        // ========== MOCKAPI.IO CONFIGURATION ==========
+        // GANTI DENGAN URL MOCKAPI KAMU!
+        // Cara dapatkan URL: 
+        // 1. Buka https://mockapi.io
+        // 2. Login dengan Google/GitHub
+        // 3. Buat project baru
+        // 4. Buat resource "users"
+        // 5. Copy URL endpointnya
+        const MOCKAPI_URL = 'https://69fbfacffce564e2591721b3.mockapi.io/api/users';
+        
+        // ========== GLOBAL VARIABLES ==========
+        let currentUser = null;
+        let charts = { lineChart: null, barChart: null, pieChart: null, sparkIncome: null, sparkExpense: null, sparkBalance: null };
+        let analyticsChart = { pie: null, bar: null };
+        let currentFilter = { jenis: 'semua', kategori: 'semua', search: '', timeRange: 'week' };
+        let laporanFilter = { startDate: '', endDate: '', kategori: 'semua', jenis: 'semua' };
+        let soundSuccess = null, soundLevelUp = null, soundNotification = null;
+        
+        // ========== HELPER FUNCTIONS ==========
+        function formatRupiah(angka) { 
+            return new Intl.NumberFormat('id-ID').format(angka); 
+        }
+        
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) overlay.classList.toggle('hidden', !show);
+        }
+        
+        function showNotification(title, message, type = 'info', autoClose = true, duration = 3500) {
+            const container = document.getElementById('notificationContainer');
+            if (!container) return;
+            
+            const icons = { success: '🎉', warning: '⚠️', error: '❌', info: 'ℹ️', achievement: '🏆' };
+            const icon = icons[type] || icons.info;
+            const notif = document.createElement('div');
+            notif.className = `notification ${type}`;
+            notif.innerHTML = `
+                <div class="notification-content">
+                    <div class="notification-icon">${icon}</div>
+                    <div class="notification-message">
+                        <div class="notification-title">${title}</div>
+                        <div class="notification-desc">${message}</div>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(notif);
+            
+            if (autoClose) {
+                setTimeout(() => {
+                    if (notif.parentElement) {
+                        notif.classList.add('hide');
+                        setTimeout(() => notif.remove(), 300);
+                    }
+                }, duration);
+            }
+            return notif;
+        }
+        
+        function playSound(type) {
+            try {
+                if (type === 'levelup' && soundLevelUp) {
+                    soundLevelUp.currentTime = 0;
+                    soundLevelUp.play().catch(e => console.log('Audio play failed:', e));
+                } else if ((type === 'success' || type === 'warning') && soundSuccess) {
+                    soundSuccess.currentTime = 0;
+                    soundSuccess.play().catch(e => console.log('Audio play failed:', e));
+                } else if (soundNotification) {
+                    soundNotification.currentTime = 0;
+                    soundNotification.play().catch(e => console.log('Audio play failed:', e));
+                }
+            } catch(e) { console.log('Audio error:', e); }
+        }
+        
+        function escapeHtml(str) { 
+            return str.replace(/[&<>]/g, function(m){ 
+                if(m==='&') return '&amp;'; 
+                if(m==='<') return '&lt;'; 
+                if(m==='>') return '&gt;'; 
+                return m;
+            }); 
+        }
+        
+        function showAchievementFloat(amount, element) {
+            let floatDiv = document.createElement('div');
+            floatDiv.className = 'achievement-float';
+            floatDiv.innerHTML = amount > 0 ? `✨ +${amount} Points ✨` : `💔 ${amount} Points 💔`;
+            floatDiv.style.color = amount > 0 ? '#f59e0b' : '#f43f5e';
+            if (element) {
+                const rect = element.getBoundingClientRect();
+                floatDiv.style.left = (rect.left + 50) + 'px';
+                floatDiv.style.top = (rect.top) + 'px';
+            }
+            document.body.appendChild(floatDiv);
+            setTimeout(() => floatDiv.remove(), 1000);
+        }
+        
+        // ========== API FUNCTIONS ==========
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            };
+            
+            if (data && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
+                options.body = JSON.stringify(data);
+            }
+            
+            try {
+                const response = await fetch(`${MOCKAPI_URL}${endpoint}`, options);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+        
+        async function loadAllUsers() {
+            try {
+                const users = await apiCall('');
+                return users;
+            } catch (error) {
+                console.log('No users found, returning empty array');
+                return [];
+            }
+        }
+        
+        async function registerUser(fullname, username, email, password) {
+            showLoading(true);
+            try {
+                const users = await loadAllUsers();
+                
+                if (users.find(u => u.username === username)) {
+                    showLoading(false);
+                    return { success: false, message: "Username sudah digunakan!" };
+                }
+                if (users.find(u => u.email === email)) {
+                    showLoading(false);
+                    return { success: false, message: "Email sudah terdaftar!" };
+                }
+                
+                const newUser = {
+                    fullname: fullname,
+                    username: username,
+                    email: email,
+                    password: password,
+                    achievementPoints: 0,
+                    badges: [],
+                    transactions: [
+                        {
+                            id: Date.now() + 1,
+                            tanggal: new Date().toISOString().slice(0,10),
+                            deskripsi: 'Selamat datang di Gamified Finance!',
+                            kategori: 'Penghasilan',
+                            jenis: 'pemasukan',
+                            jumlah: 100000
+                        },
+                        {
+                            id: Date.now() + 2,
+                            tanggal: new Date().toISOString().slice(0,10),
+                            deskripsi: 'Contoh transaksi belanja',
+                            kategori: 'Belanja',
+                            jenis: 'pengeluaran',
+                            jumlah: 50000
+                        }
+                    ],
+                    dailyLogin: {
+                        lastLoginDate: null,
+                        streak: 0,
+                        totalLogins: 0,
+                        lastClaimed: null
+                    }
+                };
+                
+                await apiCall('', 'POST', newUser);
+                showLoading(false);
+                return { success: true, message: "Pendaftaran berhasil! Silakan login." };
+            } catch (error) {
+                showLoading(false);
+                return { success: false, message: "Koneksi database gagal: " + error.message };
+            }
+        }
+        
+        async function loginUser(username, password) {
+            showLoading(true);
+            try {
+                const users = await loadAllUsers();
+                const user = users.find(u => u.username === username && u.password === password);
+                showLoading(false);
+                
+                if (user) {
+                    return { success: true, user: user };
+                }
+                return { success: false, message: "Username atau password salah!" };
+            } catch (error) {
+                showLoading(false);
+                return { success: false, message: "Login gagal: " + error.message };
+            }
+        }
+        
+        async function saveUserToAPI(user) {
+            showLoading(true);
+            try {
+                await apiCall(`/${user.id}`, 'PUT', user);
+                showLoading(false);
+                return true;
+            } catch (error) {
+                showLoading(false);
+                console.error('Failed to save user:', error);
+                return false;
+            }
+        }
+        
+        async function addAchievementPoint(amount, sourceElement = null) {
+            if (!currentUser) return;
+            currentUser.achievementPoints = (currentUser.achievementPoints || 0) + amount;
+            if (sourceElement) showAchievementFloat(amount, sourceElement);
+            await saveUserToAPI(currentUser);
+            await checkAchievements();
+            updatePlayerUI();
+        }
+        
+        async function checkAchievements() {
+            if (!currentUser) return;
+            let allTrans = currentUser.transactions || [];
+            let totalSave = allTrans.filter(t => t.kategori === 'Penghasilan' && t.jenis === 'pemasukan').reduce((a, b) => a + b.jumlah, 0);
+            let achievementPoints = currentUser.achievementPoints || 0;
+            let newBadges = [];
+            let badgeAdded = false;
+            
+            if (achievementPoints >= 10 && !currentUser.badges.includes('points10')) {
+                currentUser.badges.push('points10');
+                newBadges.push('10 Achievement Points');
+                await addAchievementPoint(5);
+                badgeAdded = true;
+            }
+            if (achievementPoints >= 50 && !currentUser.badges.includes('points50')) {
+                currentUser.badges.push('points50');
+                newBadges.push('50 Achievement Points');
+                await addAchievementPoint(10);
+                badgeAdded = true;
+            }
+            if (achievementPoints >= 100 && !currentUser.badges.includes('points100')) {
+                currentUser.badges.push('points100');
+                newBadges.push('100 Achievement Points');
+                await addAchievementPoint(15);
+                badgeAdded = true;
+            }
+            if (achievementPoints >= 200 && !currentUser.badges.includes('points200')) {
+                currentUser.badges.push('points200');
+                newBadges.push('200 Achievement Points');
+                await addAchievementPoint(20);
+                badgeAdded = true;
+            }
+            if (achievementPoints >= 500 && !currentUser.badges.includes('points500')) {
+                currentUser.badges.push('points500');
+                newBadges.push('500 Achievement Points - Master!');
+                await addAchievementPoint(30);
+                badgeAdded = true;
+            }
+            if (totalSave >= 100000 && !currentUser.badges.includes('target100k')) {
+                currentUser.badges.push('target100k');
+                newBadges.push('Capai 100K');
+                await addAchievementPoint(10);
+                badgeAdded = true;
+            }
+            if (totalSave >= 500000 && !currentUser.badges.includes('target500k')) {
+                currentUser.badges.push('target500k');
+                newBadges.push('Gacoan 500K');
+                await addAchievementPoint(15);
+                badgeAdded = true;
+            }
+            if (totalSave >= 1000000 && !currentUser.badges.includes('target1juta')) {
+                currentUser.badges.push('target1juta');
+                newBadges.push('1 Juta!');
+                await addAchievementPoint(25);
+                badgeAdded = true;
+            }
+            if (allTrans.length >= 10 && !currentUser.badges.includes('trans10')) {
+                currentUser.badges.push('trans10');
+                newBadges.push('10 Transaksi');
+                await addAchievementPoint(10);
+                badgeAdded = true;
+            }
+            if (allTrans.length >= 50 && !currentUser.badges.includes('trans50')) {
+                currentUser.badges.push('trans50');
+                newBadges.push('50 Transaksi');
+                await addAchievementPoint(20);
+                badgeAdded = true;
+            }
+            if (allTrans.length >= 100 && !currentUser.badges.includes('trans100')) {
+                currentUser.badges.push('trans100');
+                newBadges.push('100 Transaksi - Pro!');
+                await addAchievementPoint(30);
+                badgeAdded = true;
+            }
+            
+            const dailyData = currentUser.dailyLogin;
+            if (dailyData && dailyData.streak >= 7 && !currentUser.badges.includes('streak7')) {
+                currentUser.badges.push('streak7');
+                newBadges.push('7 Hari Streak!');
+                await addAchievementPoint(15);
+                badgeAdded = true;
+            }
+            if (dailyData && dailyData.streak >= 30 && !currentUser.badges.includes('streak30')) {
+                currentUser.badges.push('streak30');
+                newBadges.push('30 Hari Streak!');
+                await addAchievementPoint(30);
+                badgeAdded = true;
+            }
+            
+            if (badgeAdded) {
+                showNotification('Achievement Baru!', newBadges.join(', '), 'achievement', true, 5000);
+                playSound('levelup');
+                canvasConfetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+            
+            await saveUserToAPI(currentUser);
+        }
+        
+        async function createTransaction(transaction) {
+            if (!currentUser) return false;
+            transaction.id = Date.now();
+            currentUser.transactions.push(transaction);
+            await saveUserToAPI(currentUser);
+            await addAchievementPoint(1, document.getElementById('saveBtn'));
+            return true;
+        }
+        
+        async function updateTransaction(id, upd) {
+            if (!currentUser) return false;
+            let idx = currentUser.transactions.findIndex(t => t.id == id);
+            if (idx !== -1) {
+                currentUser.transactions[idx] = { ...currentUser.transactions[idx], ...upd };
+                await saveUserToAPI(currentUser);
+                return true;
+            }
+            return false;
+        }
+        
+        async function deleteTransaction(id) {
+            if (!currentUser) return false;
+            currentUser.transactions = currentUser.transactions.filter(t => t.id != id);
+            await saveUserToAPI(currentUser);
+            return true;
+        }
+        
+        function getAllTransactions() {
+            return currentUser ? currentUser.transactions || [] : [];
+        }
+        
+        // ========== DAILY LOGIN SYSTEM ==========
+        async function claimDailyReward() {
+            if (!currentUser) return false;
+            
+            const today = new Date().toDateString();
+            const dailyData = currentUser.dailyLogin || {
+                lastLoginDate: null,
+                streak: 0,
+                totalLogins: 0,
+                lastClaimed: null
+            };
+            
+            if (dailyData.lastClaimed === today) {
+                showNotification('Info', 'Anda sudah mengambil daily reward hari ini!', 'info', true, 3000);
+                return false;
+            }
+            
+            let newStreak = dailyData.streak;
+            if (dailyData.lastLoginDate) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                const lastLoginDate = new Date(dailyData.lastLoginDate);
+                
+                if (lastLoginDate.toDateString() === yesterday.toDateString()) {
+                    newStreak = dailyData.streak + 1;
+                } else if (lastLoginDate.toDateString() !== today) {
+                    newStreak = 1;
+                }
+            } else {
+                newStreak = 1;
+            }
+            
+            let rewardPoints = 5;
+            let rewardMessage = "";
+            
+            if (newStreak >= 30) {
+                rewardPoints = 50;
+                rewardMessage = "Luar biasa! 30 hari streak! +50 Points!";
+            } else if (newStreak >= 14) {
+                rewardPoints = 25;
+                rewardMessage = "Hebat! 14 hari streak! +25 Points!";
+            } else if (newStreak >= 7) {
+                rewardPoints = 15;
+                rewardMessage = "Mantap! 7 hari streak! +15 Points!";
+            } else if (newStreak >= 3) {
+                rewardPoints = 10;
+                rewardMessage = "Bagus! 3 hari streak! +10 Points!";
+            } else {
+                rewardMessage = `Streak ${newStreak} hari! +5 Points!`;
+            }
+            
+            dailyData.lastLoginDate = new Date().toISOString();
+            dailyData.lastClaimed = today;
+            dailyData.streak = newStreak;
+            dailyData.totalLogins = (dailyData.totalLogins || 0) + 1;
+            
+            currentUser.dailyLogin = dailyData;
+            await saveUserToAPI(currentUser);
+            await addAchievementPoint(rewardPoints);
+            
+            showNotification('Daily Reward!', rewardMessage, 'success', true, 5000);
+            playSound('success');
+            updateDailyLoginUI();
+            updatePlayerUI();
+            
+            return true;
+        }
+        
+        function updateDailyLoginUI() {
+            const container = document.getElementById('dailyLoginContainer');
+            if (!container || !currentUser) return;
+            
+            const dailyData = currentUser.dailyLogin || { streak: 0, totalLogins: 0 };
+            const streak = dailyData.streak || 0;
+            const totalLogins = dailyData.totalLogins || 0;
+            const today = new Date().toDateString();
+            const canClaim = dailyData.lastClaimed !== today;
+            
+            let nextReward = 5;
+            if (streak >= 29) nextReward = 50;
+            else if (streak >= 13) nextReward = 25;
+            else if (streak >= 6) nextReward = 15;
+            else if (streak >= 2) nextReward = 10;
+            
+            container.innerHTML = `
+                <div class="flex items-center justify-between flex-wrap gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center">
+                            <i class="fas fa-calendar-check text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">Daily Login Reward</h3>
+                            <p class="text-sm text-gray-400">Login setiap hari untuk mendapatkan bonus!</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-yellow-400">${streak}</p>
+                            <p class="text-xs text-gray-400">Streak</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-purple-400">${totalLogins}</p>
+                            <p class="text-xs text-gray-400">Total Login</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-green-400">+${nextReward}</p>
+                            <p class="text-xs text-gray-400">Next Reward</p>
+                        </div>
+                    </div>
+                    ${canClaim ? 
+                        `<button id="claimDailyBtn" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 px-6 py-2 rounded-xl font-semibold transition shadow-lg">
+                            <i class="fas fa-gift mr-2"></i> Claim Reward
+                        </button>` :
+                        `<button disabled class="bg-gray-600/50 px-6 py-2 rounded-xl font-semibold cursor-not-allowed">
+                            <i class="fas fa-check-circle mr-2"></i> Already Claimed
+                        </button>`
+                    }
+                </div>
+            `;
+            
+            const claimBtn = document.getElementById('claimDailyBtn');
+            if (claimBtn) claimBtn.addEventListener('click', () => claimDailyReward());
+        }
+        
+        function updateDailyLoginDetailPage() {
+            const container = document.getElementById('dailyLoginDetailContainer');
+            if (!container || !currentUser) return;
+            
+            const dailyData = currentUser.dailyLogin || { streak: 0, totalLogins: 0, lastLoginDate: null, lastClaimed: null };
+            const streak = dailyData.streak || 0;
+            const totalLogins = dailyData.totalLogins || 0;
+            const lastLogin = dailyData.lastLoginDate ? new Date(dailyData.lastLoginDate).toLocaleDateString('id-ID') : 'Belum pernah';
+            const lastClaimed = dailyData.lastClaimed || 'Belum pernah';
+            const today = new Date().toDateString();
+            const canClaim = dailyData.lastClaimed !== today;
+            
+            let nextReward = 5;
+            let nextRewardDesc = "";
+            if (streak >= 29) {
+                nextReward = 50;
+                nextRewardDesc = "30 Hari Streak! +50 Points";
+            } else if (streak >= 13) {
+                nextReward = 25;
+                nextRewardDesc = "14 Hari Streak! +25 Points";
+            } else if (streak >= 6) {
+                nextReward = 15;
+                nextRewardDesc = "7 Hari Streak! +15 Points";
+            } else if (streak >= 2) {
+                nextReward = 10;
+                nextRewardDesc = "3 Hari Streak! +10 Points";
+            } else {
+                nextReward = 5;
+                nextRewardDesc = "1 Hari Streak! +5 Points";
+            }
+            
+            container.innerHTML = `
+                <div class="w-full">
+                    <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center">
+                                <i class="fas fa-calendar-check text-white text-3xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-xl">Daily Login Reward</h3>
+                                <p class="text-sm text-gray-400">Login setiap hari untuk mendapatkan bonus!</p>
+                            </div>
+                        </div>
+                        ${canClaim ? 
+                            `<button id="claimDailyDetailBtn" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 px-8 py-3 rounded-xl font-semibold transition shadow-lg text-lg">
+                                <i class="fas fa-gift mr-2"></i> Claim Reward Sekarang!
+                            </button>` :
+                            `<button disabled class="bg-gray-600/50 px-8 py-3 rounded-xl font-semibold cursor-not-allowed text-lg">
+                                <i class="fas fa-check-circle mr-2"></i> Sudah Diambil Hari Ini
+                            </button>`
+                        }
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div class="text-center p-4 bg-white/5 rounded-xl"><p class="text-3xl font-bold text-yellow-400">${streak}</p><p class="text-xs text-gray-400">Current Streak</p></div>
+                        <div class="text-center p-4 bg-white/5 rounded-xl"><p class="text-3xl font-bold text-purple-400">${totalLogins}</p><p class="text-xs text-gray-400">Total Login</p></div>
+                        <div class="text-center p-4 bg-white/5 rounded-xl"><p class="text-3xl font-bold text-green-400">+${nextReward}</p><p class="text-xs text-gray-400">Next Reward</p></div>
+                        <div class="text-center p-4 bg-white/5 rounded-xl"><p class="text-3xl font-bold text-sky-400">${nextRewardDesc.split('!')[0]}!</p><p class="text-xs text-gray-400">Target Streak</p></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-white/5 rounded-xl"><p class="text-sm text-gray-400"><i class="fas fa-clock mr-1"></i> Last Login</p><p class="font-semibold">${lastLogin}</p></div>
+                        <div class="p-4 bg-white/5 rounded-xl"><p class="text-sm text-gray-400"><i class="fas fa-gift mr-1"></i> Last Claim</p><p class="font-semibold">${lastClaimed}</p></div>
+                    </div>
+                </div>
+            `;
+            
+            const claimBtn = document.getElementById('claimDailyDetailBtn');
+            if (claimBtn) {
+                claimBtn.addEventListener('click', async () => {
+                    await claimDailyReward();
+                    updateDailyLoginUI();
+                    updateDailyLoginDetailPage();
+                });
+            }
+        }
+        
+        // ========== FILTER & RENDER FUNCTIONS ==========
+        function filterTransactions() {
+            let all = getAllTransactions();
+            if (currentFilter.jenis !== 'semua') all = all.filter(t => t.jenis === currentFilter.jenis);
+            if (currentFilter.kategori !== 'semua') all = all.filter(t => t.kategori === currentFilter.kategori);
+            if (currentFilter.search) all = all.filter(t => t.deskripsi.toLowerCase().includes(currentFilter.search.toLowerCase()));
+            const now = new Date();
+            if (currentFilter.timeRange === 'week') { 
+                let start = new Date(now); 
+                start.setDate(now.getDate() - 7); 
+                all = all.filter(t => new Date(t.tanggal) >= start); 
+            } else if (currentFilter.timeRange === 'month') { 
+                let start = new Date(now); 
+                start.setMonth(now.getMonth() - 1); 
+                all = all.filter(t => new Date(t.tanggal) >= start); 
+            }
+            return all;
+        }
+        
+        function renderSummaryAndTable() {
+            let filtered = filterTransactions();
+            let pemasukan = filtered.reduce((sum, t) => t.jenis === 'pemasukan' ? sum + t.jumlah : sum, 0);
+            let pengeluaran = filtered.reduce((sum, t) => t.jenis === 'pengeluaran' ? sum + t.jumlah : sum, 0);
+            let saldo = pemasukan - pengeluaran;
+            
+            const totalPemasukan = document.getElementById('totalPemasukan');
+            const totalPengeluaran = document.getElementById('totalPengeluaran');
+            const saldoAkhir = document.getElementById('saldoAkhir');
+            
+            if (totalPemasukan) totalPemasukan.innerHTML = `Rp ${formatRupiah(pemasukan)}`;
+            if (totalPengeluaran) totalPengeluaran.innerHTML = `Rp ${formatRupiah(pengeluaran)}`;
+            if (saldoAkhir) saldoAkhir.innerHTML = `Rp ${formatRupiah(saldo)}`;
+            
+            let tbody = document.getElementById('transaksiTableBody');
+            if (!tbody) return;
+            
+            if (filtered.length === 0) { 
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-400">Tidak ada transaksi</td></tr>'; 
+                return; 
+            }
+            
+            let html = '';
+            filtered.sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal)).forEach(t => {
+                let jenisBadge = t.jenis === 'pemasukan' ? '<span class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded-full text-xs"><i class="fas fa-arrow-up mr-1"></i>Pemasukan</span>' : '<span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-full text-xs"><i class="fas fa-arrow-down mr-1"></i>Pengeluaran</span>';
+                let jumlahClass = t.jenis === 'pemasukan' ? 'text-emerald-400' : 'text-rose-400';
+                let kategoriClassMap = {
+                    'Kebutuhan Pokok': 'kebutuhan-pokok', 'Belanja': 'belanja', 'Healing': 'healing', 'Penghasilan': 'penghasilan', 'Transport': 'transport'
+                };
+                let kategoriClass = kategoriClassMap[t.kategori] || '';
+                let iconMap = {
+                    'Kebutuhan Pokok': 'fa-utensils', 'Belanja': 'fa-bag-shopping', 'Healing': 'fa-plane', 'Penghasilan': 'fa-money-bill-wave', 'Transport': 'fa-car'
+                };
+                let icon = iconMap[t.kategori] || 'fa-tag';
+                let aksiHtml = `<div class="flex justify-center gap-3"><i class="fas fa-edit text-yellow-400 cursor-pointer hover:scale-110 transition" onclick="editTransaksi(${t.id})"></i><i class="fas fa-trash-alt text-red-400 cursor-pointer hover:scale-110 transition" onclick="hapusTransaksi(${t.id})"></i></div>`;
+                html += `<tr><td class="p-3">${t.tanggal}</td><td class="p-3 font-medium">${escapeHtml(t.deskripsi)}</td><td class="p-3"><span class="badge-kategori ${kategoriClass}"><i class="fas ${icon}"></i> ${t.kategori}</span></td><td class="p-3">${jenisBadge}</td><td class="p-3 text-right ${jumlahClass} font-bold">Rp ${formatRupiah(t.jumlah)}</td><td class="p-3 text-center">${aksiHtml}</td></tr>`;
+            });
+            tbody.innerHTML = html;
+            updateKategoriDropdown();
+            updateChartsData();
+            updateSparklines();
+        }
+        
+        function updateKategoriDropdown() {
+            let kategoriOptions = ['Kebutuhan Pokok', 'Belanja', 'Healing', 'Penghasilan', 'Transport'];
+            let dropdown = document.getElementById('filterKategori');
+            if (dropdown) {
+                let currentVal = dropdown.value;
+                dropdown.innerHTML = '<option value="semua">Semua Kategori</option>';
+                kategoriOptions.forEach(k => { dropdown.innerHTML += `<option value="${k}">${k}</option>`; });
+                dropdown.value = currentVal;
+            }
+            let laporanDropdown = document.getElementById('laporanFilterKategori');
+            if (laporanDropdown) {
+                laporanDropdown.innerHTML = '<option value="semua">Semua</option>';
+                kategoriOptions.forEach(k => { laporanDropdown.innerHTML += `<option value="${k}">${k}</option>`; });
+            }
+        }
+        
+        function updateChartsData() {
+            let filtered = filterTransactions();
+            let grouped = {};
+            filtered.forEach(t => { 
+                let date = t.tanggal; 
+                if(!grouped[date]) grouped[date] = { income:0, expense:0 }; 
+                if(t.jenis==='pemasukan') grouped[date].income += t.jumlah; 
+                else grouped[date].expense += t.jumlah; 
+            });
+            let sortedDates = Object.keys(grouped).sort();
+            let balanceSeries = []; 
+            let running = 0;
+            sortedDates.forEach(d => { 
+                running += grouped[d].income - grouped[d].expense; 
+                balanceSeries.push(running); 
+            });
+            if(charts.lineChart) charts.lineChart.updateOptions({ xaxis: { categories: sortedDates }, series: [{ name: 'Saldo', data: balanceSeries }] });
+            let expenseByCat = {};
+            filtered.filter(t=>t.jenis==='pengeluaran').forEach(t=>{ expenseByCat[t.kategori] = (expenseByCat[t.kategori]||0) + t.jumlah; });
+            let topCats = Object.entries(expenseByCat).sort((a,b)=>b[1]-a[1]).slice(0,5);
+            if(charts.barChart) charts.barChart.updateOptions({ xaxis: { categories: topCats.map(c=>c[0]) }, series: [{ name: 'Pengeluaran', data: topCats.map(c=>c[1]) }] });
+            if(charts.pieChart) charts.pieChart.updateOptions({ series: topCats.map(c=>c[1]), labels: topCats.map(c=>c[0]) });
+        }
+        
+        function updateSparklines() {
+            let all = getAllTransactions();
+            let incomeData = all.filter(t=>t.jenis==='pemasukan').map(t=>t.jumlah);
+            let expenseData = all.filter(t=>t.jenis==='pengeluaran').map(t=>t.jumlah);
+            let balanceRunning = 0, balanceSeries = [];
+            all.sort((a,b)=>new Date(a.tanggal)-new Date(b.tanggal)).forEach(t=>{ balanceRunning += (t.jenis==='pemasukan'?t.jumlah:-t.jumlah); balanceSeries.push(balanceRunning); });
+            if(charts.sparkIncome) charts.sparkIncome.updateSeries([{ data: incomeData }]);
+            if(charts.sparkExpense) charts.sparkExpense.updateSeries([{ data: expenseData }]);
+            if(charts.sparkBalance) charts.sparkBalance.updateSeries([{ data: balanceSeries }]);
+        }
+        
+        function initAllCharts() {
+            const theme = document.body.classList.contains('theme-light') ? 'light' : 'dark';
+            charts.lineChart = new ApexCharts(document.querySelector("#lineChart"), { 
+                chart: { type: 'area', height: 350, toolbar: { show: false }, background: 'transparent' }, 
+                stroke: { curve: 'smooth', width: 2 }, fill: { type: 'gradient' }, colors: ['#a855f7'], 
+                series: [{ name: 'Saldo', data: [] }], 
+                xaxis: { labels: { style: { colors: theme === 'light' ? '#0f172a' : '#94a3b8' } } }, 
+                tooltip: { theme: theme } 
+            });
+            charts.lineChart.render();
+            
+            charts.barChart = new ApexCharts(document.querySelector("#barChart"), { 
+                chart: { type: 'bar', height: 300, background: 'transparent' }, 
+                plotOptions: { bar: { borderRadius: 8 } }, colors: ['#f97316'], 
+                series: [{ name: 'Pengeluaran', data: [] }], xaxis: { categories: [] }, 
+                tooltip: { theme: theme } 
+            });
+            charts.barChart.render();
+            
+            charts.pieChart = new ApexCharts(document.querySelector("#pieChart"), { 
+                chart: { type: 'pie', height: 300, background: 'transparent' }, 
+                labels: [], series: [], theme: { mode: theme }, 
+                tooltip: { theme: theme }, 
+                fill: { colors: ['#10b981','#f43f5e','#3b82f6','#eab308','#a855f7'] } 
+            });
+            charts.pieChart.render();
+            
+            let sparkOpt = { chart: { type: 'line', sparkline: { enabled: true } }, stroke: { width: 2, curve: 'smooth' }, tooltip: { enabled: false }, series: [{ data: [] }] };
+            charts.sparkIncome = new ApexCharts(document.querySelector("#sparkIncome"), { ...sparkOpt, colors: ['#22c55e'] });
+            charts.sparkExpense = new ApexCharts(document.querySelector("#sparkExpense"), { ...sparkOpt, colors: ['#f43f5e'] });
+            charts.sparkBalance = new ApexCharts(document.querySelector("#sparkBalance"), { ...sparkOpt, colors: ['#38bdf8'] });
+            charts.sparkIncome.render(); 
+            charts.sparkExpense.render(); 
+            charts.sparkBalance.render();
+        }
+        
+        function updatePlayerUI() {
+            if (!currentUser) return;
+            let achievementPoints = currentUser.achievementPoints || 0;
+            let badgeCount = currentUser.badges?.length || 0;
+            
+            let title = "";
+            if (achievementPoints >= 500) title = "Legenda Sejati";
+            else if (achievementPoints >= 200) title = "Raja Keuangan";
+            else if (achievementPoints >= 100) title = "Sultan Muda";
+            else if (achievementPoints >= 50) title = "Master Budget";
+            else if (achievementPoints >= 20) title = "Pejuang Rupiah";
+            else if (achievementPoints >= 5) title = "Pemula Hemat";
+            else title = "Petualang Baru";
+            
+            let card = document.getElementById('playerAchievementCard');
+            if (card) {
+                card.innerHTML = `
+                    <div class="flex flex-wrap justify-between items-center gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="level-badge w-20 h-20 rounded-2xl flex flex-col items-center justify-center text-white">
+                                <i class="fas fa-medal text-3xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold">${currentUser.fullname || currentUser.username}</h2>
+                                <p class="text-yellow-400 text-sm">${title}</p>
+                                <div class="flex gap-2 mt-1">
+                                    <span class="text-xs bg-yellow-500/20 px-2 py-0.5 rounded-full"><i class="fas fa-medal"></i> ${badgeCount} Badge</span>
+                                    <span class="text-xs bg-purple-500/20 px-2 py-0.5 rounded-full"><i class="fas fa-star"></i> ${achievementPoints} Points</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-[200px]">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span><i class="fas fa-trophy text-yellow-400"></i> Achievement Points: ${achievementPoints}</span>
+                                <span>Target 500: Master</span>
+                            </div>
+                            <div class="h-3 bg-gray-700 rounded-full overflow-hidden">
+                                <div class="achievement-bar-bg h-full rounded-full" style="width: ${Math.min((achievementPoints / 500) * 100, 100)}%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                <span>0</span><span>100</span><span>200</span><span>500</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            renderBadges();
+        }
+        
+        function renderBadges() {
+            if (!currentUser) return;
+            let allBadges = [
+                { id: 'points10', name: '10 Points', icon: 'fa-star', desc: 'Kumpulkan 10 Achievement Points' },
+                { id: 'points50', name: '50 Points', icon: 'fa-crown', desc: 'Kumpulkan 50 Achievement Points' },
+                { id: 'points100', name: '100 Points', icon: 'fa-gem', desc: 'Kumpulkan 100 Achievement Points' },
+                { id: 'points200', name: '200 Points', icon: 'fa-crown', desc: 'Kumpulkan 200 Achievement Points' },
+                { id: 'points500', name: '500 Points', icon: 'fa-trophy', desc: 'Kumpulkan 500 Achievement Points - Master!' },
+                { id: 'target100k', name: 'Target 100K', icon: 'fa-bullseye', desc: 'Total tabungan 100rb' },
+                { id: 'target500k', name: 'Gacoan 500K', icon: 'fa-money-bill-wave', desc: 'Total tabungan 500rb' },
+                { id: 'target1juta', name: '1 Juta!', icon: 'fa-sack-dollar', desc: 'Total tabungan 1 juta' },
+                { id: 'trans10', name: '10 Transaksi', icon: 'fa-chart-line', desc: 'Melakukan 10 transaksi' },
+                { id: 'trans50', name: '50 Transaksi', icon: 'fa-chart-simple', desc: 'Melakukan 50 transaksi' },
+                { id: 'trans100', name: '100 Transaksi', icon: 'fa-chart-line', desc: 'Melakukan 100 transaksi - Pro!' },
+                { id: 'streak7', name: '7 Hari Streak', icon: 'fa-fire', desc: 'Login 7 hari berturut-turut' },
+                { id: 'streak30', name: '30 Hari Streak', icon: 'fa-calendar-check', desc: 'Login 30 hari berturut-turut' }
+            ];
+            let container = document.getElementById('badgeContainer');
+            if (!container) return;
+            container.innerHTML = allBadges.map(b => `
+                <div class="glass-card p-4 text-center ${currentUser.badges?.includes(b.id) ? 'border-yellow-500' : 'opacity-50'}">
+                    <i class="fas ${b.icon} text-3xl ${currentUser.badges?.includes(b.id) ? 'text-yellow-400' : 'text-gray-500'} mb-2"></i>
+                    <p class="font-bold">${b.name}</p>
+                    <p class="text-xs text-gray-400">${b.desc}</p>
+                    ${currentUser.badges?.includes(b.id) ? '<span class="text-green-400 text-xs mt-1"><i class="fas fa-check-circle mr-1"></i>Unlocked</span>' : '<span class="text-gray-500 text-xs mt-1"><i class="fas fa-lock mr-1"></i>Locked</span>'}
+                </div>
+            `).join('');
+        }
+        
+        function renderAnalytics() {
+            let all = getAllTransactions();
+            let totalPemasukan = all.filter(t=>t.jenis==='pemasukan').reduce((a,b)=>a+b.jumlah,0);
+            let expenseByCat = {};
+            all.filter(t=>t.jenis==='pengeluaran').forEach(t=>{ expenseByCat[t.kategori] = (expenseByCat[t.kategori]||0)+t.jumlah; });
+            let top = Object.entries(expenseByCat).sort((a,b)=>b[1]-a[1])[0];
+            
+            const insightTopCatText = document.getElementById('insightTopCatText');
+            if (insightTopCatText) insightTopCatText.innerHTML = top ? `${top[0]} : ${formatRupiah(top[1])}` : 'Belum ada data';
+            
+            let now = new Date();
+            let lastWeekStart = new Date(now); lastWeekStart.setDate(now.getDate()-14);
+            let lastWeekEnd = new Date(now); lastWeekEnd.setDate(now.getDate()-7);
+            let thisWeekStart = new Date(now); thisWeekStart.setDate(now.getDate()-7);
+            let thisWeekEnd = now;
+            let lastExpense = all.filter(t=>t.jenis==='pengeluaran' && new Date(t.tanggal)>=lastWeekStart && new Date(t.tanggal)<=lastWeekEnd).reduce((a,b)=>a+b.jumlah,0);
+            let thisExpense = all.filter(t=>t.jenis==='pengeluaran' && new Date(t.tanggal)>=thisWeekStart && new Date(t.tanggal)<=thisWeekEnd).reduce((a,b)=>a+b.jumlah,0);
+            let trend = lastExpense ? ((thisExpense - lastExpense)/lastExpense*100).toFixed(1) : 0;
+            let trendText = trend>0 ? `Naik ${trend}%` : (trend<0 ? `Turun ${Math.abs(trend)}%` : 'Stabil');
+            
+            const insightTrendText = document.getElementById('insightTrendText');
+            if (insightTrendText) insightTrendText.innerHTML = trendText;
+            
+            let totalPengeluaran = all.filter(t=>t.jenis==='pengeluaran').reduce((a,b)=>a+b.jumlah,0);
+            let status = totalPengeluaran > totalPemasukan ? '⚠️ Pengeluaran > Pemasukan! Evaluasi.' : '✅ Sehat, pemasukan mencukupi.';
+            
+            const insightBorosText = document.getElementById('insightBorosText');
+            if (insightBorosText) insightBorosText.innerHTML = status;
+            
+            let saran = (top && top[0]==='Kebutuhan Pokok') ? 'Coba kurangi belanja kebutuhan tidak esensial.' : (totalPengeluaran > totalPemasukan*0.8 ? 'Pengeluaran tinggi, tingkatkan tabungan.' : 'Pertahankan pola keuangan baik!');
+            
+            const insightSaranText = document.getElementById('insightSaranText');
+            if (insightSaranText) insightSaranText.innerHTML = saran;
+            
+            let pieLabels = Object.keys(expenseByCat);
+            let pieSeries = Object.values(expenseByCat);
+            const theme = document.body.classList.contains('theme-light') ? 'light' : 'dark';
+            
+            const analyticsPieChart = document.querySelector("#analyticsPieChart");
+            if (analyticsPieChart) {
+                if(analyticsChart.pie) analyticsChart.pie.updateOptions({ labels: pieLabels, series: pieSeries, theme: { mode: theme } });
+                else { analyticsChart.pie = new ApexCharts(analyticsPieChart, { chart: { type: 'pie', height: 350, background: 'transparent' }, labels: pieLabels, series: pieSeries, theme: { mode: theme }, tooltip: { theme: theme } }); analyticsChart.pie.render(); }
+            }
+            
+            let range = document.getElementById('analyticsTimeRange') ? document.getElementById('analyticsTimeRange').value : 'week';
+            let grouped = {};
+            all.forEach(t=>{ let date = new Date(t.tanggal); let key = (range==='week') ? `Minggu ${getWeekNumber(date)}` : (range==='month' ? `${date.getFullYear()}-${date.getMonth()+1}` : date.toISOString().slice(0,7)); if(!grouped[key]) grouped[key] = { income:0, expense:0 }; if(t.jenis==='pemasukan') grouped[key].income += t.jumlah; else grouped[key].expense += t.jumlah; });
+            let categories = Object.keys(grouped).sort();
+            let incomeData = categories.map(c=>grouped[c].income);
+            let expenseData = categories.map(c=>grouped[c].expense);
+            
+            const analyticsBarChart = document.querySelector("#analyticsBarChart");
+            if (analyticsBarChart) {
+                if(analyticsChart.bar) analyticsChart.bar.updateOptions({ xaxis: { categories: categories }, series: [{ name: 'Pemasukan', data: incomeData }, { name: 'Pengeluaran', data: expenseData }], theme: { mode: theme } });
+                else { analyticsChart.bar = new ApexCharts(analyticsBarChart, { chart: { type: 'bar', height: 350, background: 'transparent' }, plotOptions: { bar: { columnWidth: '55%' } }, colors: ['#22c55e','#f43f5e'], series: [{ name: 'Pemasukan', data: incomeData }, { name: 'Pengeluaran', data: expenseData }], xaxis: { categories: categories }, tooltip: { theme: theme }, theme: { mode: theme } }); analyticsChart.bar.render(); }
+            }
+            
+            let kebutuhanCat = ['Kebutuhan Pokok'];
+            let keinginanCat = ['Belanja', 'Healing', 'Transport'];
+            let totalKebutuhan = all.filter(t=>t.jenis==='pengeluaran' && kebutuhanCat.includes(t.kategori)).reduce((a,b)=>a+b.jumlah,0);
+            let totalKeinginan = all.filter(t=>t.jenis==='pengeluaran' && keinginanCat.includes(t.kategori)).reduce((a,b)=>a+b.jumlah,0);
+            let totalTabungan = totalPemasukan - totalKebutuhan - totalKeinginan;
+            let pctK = (totalKebutuhan/totalPemasukan*100)||0, pctKe = (totalKeinginan/totalPemasukan*100)||0, pctT = (totalTabungan/totalPemasukan*100)||0;
+            
+            const pctKebutuhan = document.getElementById('pctKebutuhan');
+            const pctKeinginan = document.getElementById('pctKeinginan');
+            const pctTabungan = document.getElementById('pctTabungan');
+            const barKebutuhan = document.getElementById('barKebutuhan');
+            const barKeinginan = document.getElementById('barKeinginan');
+            const barTabungan = document.getElementById('barTabungan');
+            
+            if (pctKebutuhan) pctKebutuhan.innerText = Math.round(pctK)+'%';
+            if (pctKeinginan) pctKeinginan.innerText = Math.round(pctKe)+'%';
+            if (pctTabungan) pctTabungan.innerText = Math.round(pctT)+'%';
+            if (barKebutuhan) barKebutuhan.style.width = Math.min(pctK,100)+'%';
+            if (barKeinginan) barKeinginan.style.width = Math.min(pctKe,100)+'%';
+            if (barTabungan) barTabungan.style.width = Math.min(pctT,100)+'%';
+        }
+        
+        function getWeekNumber(d) { 
+            let date = new Date(d.getTime()); 
+            date.setHours(0,0,0,0); 
+            date.setDate(date.getDate()+3-(date.getDay()+6)%7); 
+            let week1 = new Date(date.getFullYear(),0,4); 
+            return 1+Math.round(((date.getTime()-week1.getTime())/86400000-3+(week1.getDay()+6)%7)/7); 
+        }
+        
+        function renderLaporan() {
+            let all = getAllTransactions();
+            let filtered = [...all];
+            if(laporanFilter.startDate) filtered = filtered.filter(t=>t.tanggal >= laporanFilter.startDate);
+            if(laporanFilter.endDate) filtered = filtered.filter(t=>t.tanggal <= laporanFilter.endDate);
+            if(laporanFilter.kategori !== 'semua') filtered = filtered.filter(t=>t.kategori === laporanFilter.kategori);
+            if(laporanFilter.jenis !== 'semua') filtered = filtered.filter(t=>t.jenis === laporanFilter.jenis);
+            let pemasukan = filtered.filter(t=>t.jenis==='pemasukan').reduce((a,b)=>a+b.jumlah,0);
+            let pengeluaran = filtered.filter(t=>t.jenis==='pengeluaran').reduce((a,b)=>a+b.jumlah,0);
+            
+            const laporanTotalPemasukan = document.getElementById('laporanTotalPemasukan');
+            const laporanTotalPengeluaran = document.getElementById('laporanTotalPengeluaran');
+            const laporanSaldo = document.getElementById('laporanSaldo');
+            
+            if (laporanTotalPemasukan) laporanTotalPemasukan.innerHTML = `Rp ${formatRupiah(pemasukan)}`;
+            if (laporanTotalPengeluaran) laporanTotalPengeluaran.innerHTML = `Rp ${formatRupiah(pengeluaran)}`;
+            if (laporanSaldo) laporanSaldo.innerHTML = `Rp ${formatRupiah(pemasukan-pengeluaran)}`;
+            
+            let tbody = document.getElementById('laporanTableBody');
+            if (!tbody) return;
+            
+            if(filtered.length===0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8">Tidak ada数据</td></tr>'; return; }
+            
+            let html = '';
+            filtered.sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal)).forEach(t=>{
+                let jenisBadge = t.jenis==='pemasukan' ? '<span class="text-emerald-400">Pemasukan</span>' : '<span class="text-rose-400">Pengeluaran</span>';
+                let jumlahClass = t.jenis==='pemasukan' ? 'text-emerald-400' : 'text-rose-400';
+                html += `<tr><td class="p-3">${t.tanggal}</td><td class="p-3">${escapeHtml(t.deskripsi)}</td><td class="p-3">${t.kategori}</td><td class="p-3">${jenisBadge}</td><td class="p-3 text-right ${jumlahClass} font-bold">Rp ${formatRupiah(t.jumlah)}</td></tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        
+        function updateAllUI() { 
+            renderSummaryAndTable(); 
+            renderAnalytics(); 
+            renderLaporan(); 
+            updatePlayerUI(); 
+            updateDailyLoginUI();
+        }
+        
+        function setTheme(theme) {
+            if (theme === 'light') {
+                document.body.classList.remove('theme-dark');
+                document.body.classList.add('theme-light');
+                localStorage.setItem('theme', 'light');
+                const themeText = document.getElementById('themeText');
+                const themeToggleIcon = document.querySelector('#themeToggle i');
+                if (themeText) themeText.innerText = 'Dark Mode';
+                if (themeToggleIcon) themeToggleIcon.className = 'fas fa-moon';
+            } else {
+                document.body.classList.remove('theme-light');
+                document.body.classList.add('theme-dark');
+                localStorage.setItem('theme', 'dark');
+                const themeText = document.getElementById('themeText');
+                const themeToggleIcon = document.querySelector('#themeToggle i');
+                if (themeText) themeText.innerText = 'Light Mode';
+                if (themeToggleIcon) themeToggleIcon.className = 'fas fa-sun';
+            }
+            const newTheme = theme === 'light' ? 'light' : 'dark';
+            if (charts.lineChart) {
+                charts.lineChart.updateOptions({ theme: { mode: newTheme }, xaxis: { labels: { style: { colors: newTheme === 'light' ? '#0f172a' : '#94a3b8' } } } });
+                charts.barChart.updateOptions({ theme: { mode: newTheme } });
+                charts.pieChart.updateOptions({ theme: { mode: newTheme } });
+                if (analyticsChart.pie) analyticsChart.pie.updateOptions({ theme: { mode: newTheme } });
+                if (analyticsChart.bar) analyticsChart.bar.updateOptions({ theme: { mode: newTheme } });
+            }
+        }
+        
+        function switchPage(page) {
+            const pages = ['pageDashboard', 'pageDaily', 'pageAnalytics', 'pageLaporan', 'pageAchievement', 'pageSettings'];
+            pages.forEach(pageId => {
+                const el = document.getElementById(pageId);
+                if (el) el.classList.add('hidden');
+            });
+            
+            let targetId = '';
+            switch(page) {
+                case 'dashboard': targetId = 'pageDashboard'; break;
+                case 'daily': targetId = 'pageDaily'; break;
+                case 'analytics': targetId = 'pageAnalytics'; break;
+                case 'laporan': targetId = 'pageLaporan'; break;
+                case 'achievement': targetId = 'pageAchievement'; break;
+                case 'settings': targetId = 'pageSettings'; break;
+                default: targetId = 'pageDashboard';
+            }
+            
+            const target = document.getElementById(targetId);
+            if (target) target.classList.remove('hidden');
+            
+            if (page === 'dashboard') {
+                updateDailyLoginUI();
+                updatePlayerUI();
+                renderSummaryAndTable();
+            } else if (page === 'daily') {
+                updateDailyLoginDetailPage();
+            } else if (page === 'analytics') {
+                renderAnalytics();
+            } else if (page === 'laporan') {
+                renderLaporan();
+            } else if (page === 'achievement') {
+                renderBadges();
+            }
+            
+            document.querySelectorAll('.menu-item').forEach(menu => menu.classList.remove('active'));
+            const active = document.querySelector(`.menu-item[data-page="${page}"]`);
+            if (active) active.classList.add('active');
+        }
+        
+        // ========== GLOBAL FUNCTIONS FOR HTML ==========
+        window.editTransaksi = async (id) => { 
+            let t = getAllTransactions().find(t=>t.id==id); 
+            if(t){ 
+                const modalTitle = document.getElementById('modalTitle');
+                const editId = document.getElementById('editId');
+                const tanggal = document.getElementById('tanggal');
+                const deskripsi = document.getElementById('deskripsi');
+                const kategori = document.getElementById('kategori');
+                const jenis = document.getElementById('jenis');
+                const jumlah = document.getElementById('jumlah');
+                const transaksiModal = document.getElementById('transaksiModal');
+                
+                if (modalTitle) modalTitle.innerHTML='<i class="fas fa-edit mr-2"></i> Edit Transaksi'; 
+                if (editId) editId.value=t.id; 
+                if (tanggal) tanggal.value=t.tanggal; 
+                if (deskripsi) deskripsi.value=t.deskripsi; 
+                if (kategori) kategori.value=t.kategori; 
+                if (jenis) jenis.value=t.jenis; 
+                if (jumlah) jumlah.value=t.jumlah; 
+                if (transaksiModal) transaksiModal.classList.remove('hidden'); 
+            } 
+        };
+        
+        window.hapusTransaksi = async (id) => { 
+            if(confirm('Hapus transaksi ini?')) { 
+                await deleteTransaction(id); 
+                showNotification('Transaksi Dihapus', 'Transaksi berhasil dihapus', 'info', true, 3000);
+                updateAllUI(); 
+            } 
+        };
+        
+        async function simpanTransaksiHandler() {
+            let id = document.getElementById('editId').value;
+            let tanggal = document.getElementById('tanggal').value;
+            let deskripsi = document.getElementById('deskripsi').value.trim();
+            let kategori = document.getElementById('kategori').value;
+            let jenis = document.getElementById('jenis').value;
+            let jumlah = parseFloat(document.getElementById('jumlah').value);
+            
+            if(!tanggal || !deskripsi || !kategori || isNaN(jumlah) || jumlah<=0) { 
+                showNotification('Gagal!', 'Data tidak valid', 'error', true, 3000);
+                return; 
+            }
+            
+            if(id) {
+                await updateTransaction(parseInt(id), { tanggal, deskripsi, kategori, jenis, jumlah });
+            } else {
+                await createTransaction({ tanggal, deskripsi, kategori, jenis, jumlah });
+            }
+            
+            const transaksiModal = document.getElementById('transaksiModal');
+            if (transaksiModal) transaksiModal.classList.add('hidden');
+            
+            showNotification('Berhasil!', 'Transaksi telah disimpan', 'success', true, 3000);
+            updateAllUI();
+        }
+        
+        async function resetAllData() {
+            if (!currentUser) return;
+            currentUser.transactions = [];
+            currentUser.achievementPoints = 0;
+            currentUser.badges = [];
+            currentUser.dailyLogin = {
+                lastLoginDate: null,
+                streak: 0,
+                totalLogins: 0,
+                lastClaimed: null
+            };
+            await saveUserToAPI(currentUser);
+            updateAllUI();
+            showNotification('Data Direset', 'Semua data telah direset', 'warning', true, 4000);
+        }
+        
+        async function resetTransaksiOnly() {
+            if (!currentUser) return;
+            currentUser.transactions = [];
+            await saveUserToAPI(currentUser);
+            updateAllUI();
+            showNotification('Transaksi Direset', 'Semua transaksi telah dihapus', 'warning', true, 4000);
+        }
+        
+        function initAudio() {
+            soundSuccess = document.getElementById('soundSuccess');
+            soundLevelUp = document.getElementById('soundLevelUp');
+            soundNotification = document.getElementById('soundNotification');
+        }
+        
+        function parseAmount(value) {
+            if (value === undefined || value === null || value === '') return 0;
+            if (typeof value === 'number') return Math.abs(value);
+            let str = String(value).trim().replace(/[Rp\s\$,]/gi, '');
+            let amount = parseFloat(str);
+            return isNaN(amount) ? 0 : Math.abs(amount);
+        }
+        
+        function parseDateFromAnyFormat(value) {
+            if (!value) return new Date().toISOString().slice(0, 10);
+            let dateObj = new Date(value);
+            if (!isNaN(dateObj.getTime())) return dateObj.toISOString().slice(0, 10);
+            return new Date().toISOString().slice(0, 10);
+        }
+        
+        function importFromJSON(jsonData) {
+            try {
+                let imported = JSON.parse(jsonData);
+                if (!Array.isArray(imported)) return { success: false, message: "Format JSON harus berupa array" };
+                let transactions = [];
+                for (let i = 0; i < imported.length; i++) {
+                    let item = imported[i];
+                    if (!item.tanggal || !item.jumlah) continue;
+                    transactions.push({
+                        id: Date.now() + Math.random() + i,
+                        tanggal: parseDateFromAnyFormat(item.tanggal),
+                        deskripsi: item.deskripsi || 'Transaksi import',
+                        kategori: item.kategori || 'Kebutuhan Pokok',
+                        jenis: item.jenis === 'pemasukan' ? 'pemasukan' : 'pengeluaran',
+                        jumlah: parseAmount(item.jumlah)
+                    });
+                }
+                if (transactions.length === 0) return { success: false, message: "Tidak ada data transaksi yang valid" };
+                return { success: true, transactions: transactions, count: transactions.length };
+            } catch (e) {
+                return { success: false, message: "Format JSON tidak valid: " + e.message };
+            }
+        }
+        
+        // ========== DOM CONTENT LOADED ==========
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('🚀 Aplikasi dimulai...');
+            
+            initAudio();
+            
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) setTheme(savedTheme);
+            else setTheme('dark');
+            
+            // Tab Login/Register
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            
+            if (loginTab && registerTab) {
+                loginTab.addEventListener('click', () => {
+                    loginTab.classList.add('text-purple-400', 'border-purple-400');
+                    loginTab.classList.remove('text-gray-400', 'border-transparent');
+                    registerTab.classList.remove('text-purple-400', 'border-purple-400');
+                    registerTab.classList.add('text-gray-400', 'border-transparent');
+                    if (loginForm) loginForm.classList.remove('hidden');
+                    if (registerForm) registerForm.classList.add('hidden');
+                });
+                
+                registerTab.addEventListener('click', () => {
+                    registerTab.classList.add('text-purple-400', 'border-purple-400');
+                    registerTab.classList.remove('text-gray-400', 'border-transparent');
+                    loginTab.classList.remove('text-purple-400', 'border-purple-400');
+                    loginTab.classList.add('text-gray-400', 'border-transparent');
+                    if (registerForm) registerForm.classList.remove('hidden');
+                    if (loginForm) loginForm.classList.add('hidden');
+                });
+            }
+            
+            // Theme Toggle
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => { 
+                    const isLight = document.body.classList.contains('theme-light'); 
+                    setTheme(isLight ? 'dark' : 'light'); 
+                });
+            }
+            
+            // Login Submit
+            const loginFormEl = document.getElementById('loginForm');
+            if (loginFormEl) {
+                loginFormEl.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    let username = document.getElementById('loginUsername').value;
+                    let password = document.getElementById('loginPassword').value;
+                    let result = await loginUser(username, password);
+                    if(result.success) {
+                        currentUser = result.user;
+                        const loginContainer = document.getElementById('loginContainer');
+                        const dashboardContainer = document.getElementById('dashboardContainer');
+                        const sidebarUsername = document.getElementById('sidebarUsername');
+                        const sidebarEmail = document.getElementById('sidebarEmail');
+                        
+                        if (loginContainer) loginContainer.classList.add('hidden');
+                        if (dashboardContainer) dashboardContainer.classList.remove('hidden');
+                        if (sidebarUsername) sidebarUsername.innerText = currentUser.fullname || currentUser.username;
+                        if (sidebarEmail) sidebarEmail.innerText = currentUser.email;
+                        
+                        initAllCharts();
+                        updateAllUI();
+                        updateDailyLoginDetailPage();
+                        updateKategoriDropdown();
+                        switchPage('dashboard');
+                        showNotification('Selamat Datang!', `Halo ${currentUser.fullname || currentUser.username}!`, 'success', true, 4000);
+                    } else { 
+                        const loginError = document.getElementById('loginError');
+                        if (loginError) loginError.innerText = result.message;
+                        showNotification('Login Gagal!', result.message, 'error', true, 3000);
+                    }
+                });
+            }
+            
+            // Register Submit
+            const registerFormEl = document.getElementById('registerForm');
+            if (registerFormEl) {
+                registerFormEl.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    let fullname = document.getElementById('regFullname').value;
+                    let username = document.getElementById('regUsername').value;
+                    let email = document.getElementById('regEmail').value;
+                    let password = document.getElementById('regPassword').value;
+                    let confirmPassword = document.getElementById('regConfirmPassword').value;
+                    
+                    if (password !== confirmPassword) {
+                        const registerError = document.getElementById('registerError');
+                        if (registerError) registerError.innerText = 'Password tidak cocok!';
+                        showNotification('Gagal!', 'Password tidak cocok', 'error', true, 3000);
+                        return;
+                    }
+                    
+                    if (password.length < 6) {
+                        const registerError = document.getElementById('registerError');
+                        if (registerError) registerError.innerText = 'Password minimal 6 karakter!';
+                        showNotification('Gagal!', 'Password minimal 6 karakter', 'error', true, 3000);
+                        return;
+                    }
+                    
+                    let result = await registerUser(fullname, username, email, password);
+                    if(result.success) {
+                        showNotification('Pendaftaran Berhasil!', result.message, 'success', true, 3000);
+                        if (loginTab) loginTab.click();
+                        const loginUsername = document.getElementById('loginUsername');
+                        const loginPassword = document.getElementById('loginPassword');
+                        const registerError = document.getElementById('registerError');
+                        if (loginUsername) loginUsername.value = username;
+                        if (loginPassword) loginPassword.value = '';
+                        if (registerError) registerError.innerText = '';
+                    } else {
+                        const registerError = document.getElementById('registerError');
+                        if (registerError) registerError.innerText = result.message;
+                        showNotification('Gagal!', result.message, 'error', true, 3000);
+                    }
+                });
+            }
+            
+            // Logout
+            const logoutBtn = document.getElementById('logoutBtnSide');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => { 
+                    currentUser = null; 
+                    const loginContainer = document.getElementById('loginContainer');
+                    const dashboardContainer = document.getElementById('dashboardContainer');
+                    const loginUsername = document.getElementById('loginUsername');
+                    const loginPassword = document.getElementById('loginPassword');
+                    
+                    if (loginContainer) loginContainer.classList.remove('hidden'); 
+                    if (dashboardContainer) dashboardContainer.classList.add('hidden');
+                    if (loginUsername) loginUsername.value = '';
+                    if (loginPassword) loginPassword.value = '';
+                    showNotification('Sampai Jumpa!', 'Anda telah logout', 'info', true, 3000);
+                });
+            }
+            
+            // Save Transaction
+            const saveBtn = document.getElementById('saveBtn');
+            if (saveBtn) saveBtn.addEventListener('click', simpanTransaksiHandler);
+            
+            // Add Transaction Button
+            const tambahBtn = document.getElementById('tambahBtn');
+            if (tambahBtn) {
+                tambahBtn.addEventListener('click', () => { 
+                    const transaksiForm = document.getElementById('transaksiForm');
+                    const editId = document.getElementById('editId');
+                    const modalTitle = document.getElementById('modalTitle');
+                    const tanggal = document.getElementById('tanggal');
+                    const transaksiModal = document.getElementById('transaksiModal');
+                    
+                    if (transaksiForm) transaksiForm.reset(); 
+                    if (editId) editId.value=''; 
+                    if (modalTitle) modalTitle.innerHTML='<i class="fas fa-plus mr-2"></i> Tambah Transaksi'; 
+                    if (tanggal) tanggal.valueAsDate=new Date(); 
+                    if (transaksiModal) transaksiModal.classList.remove('hidden'); 
+                });
+            }
+            
+            // Close Modal
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            if (closeModalBtn) closeModalBtn.addEventListener('click', () => {
+                const transaksiModal = document.getElementById('transaksiModal');
+                if (transaksiModal) transaksiModal.classList.add('hidden');
+            });
+            
+            const modalBackdrop = document.getElementById('modalBackdrop');
+            if (modalBackdrop) modalBackdrop.addEventListener('click', () => {
+                const transaksiModal = document.getElementById('transaksiModal');
+                if (transaksiModal) transaksiModal.classList.add('hidden');
+            });
+            
+            // Filters
+            const filterJenis = document.getElementById('filterJenis');
+            if (filterJenis) filterJenis.addEventListener('change', (e) => { currentFilter.jenis = e.target.value; updateAllUI(); });
+            
+            const filterKategori = document.getElementById('filterKategori');
+            if (filterKategori) filterKategori.addEventListener('change', (e) => { currentFilter.kategori = e.target.value; updateAllUI(); });
+            
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) searchInput.addEventListener('input', (e) => { currentFilter.search = e.target.value; updateAllUI(); });
+            
+            const filterWaktu = document.getElementById('filterWaktu');
+            if (filterWaktu) filterWaktu.addEventListener('change', (e) => { currentFilter.timeRange = e.target.value; updateAllUI(); });
+            
+            // Export Data
+            const exportBtn = document.getElementById('exportDataBtn');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', function() { 
+                    let data = getAllTransactions();
+                    if (!data || data.length === 0) {
+                        showNotification('Error', 'Tidak ada data untuk diekspor!', 'error', true, 3000);
+                        return;
+                    }
+                    
+                    let formatSelect = document.getElementById('formatFile');
+                    let format = formatSelect ? formatSelect.value : 'json';
+                    let fileName = `keuangan_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}`;
+                    
+                    try {
+                        if (format === 'json') {
+                            let blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                            let link = document.createElement('a');
+                            link.href = URL.createObjectURL(blob);
+                            link.download = fileName + '.json';
+                            link.click();
+                            URL.revokeObjectURL(link.href);
+                            showNotification('Success', `Export ${data.length} transaksi ke JSON`, 'success', true, 3000);
+                        } else if (format === 'csv') {
+                            let headers = Object.keys(data[0]);
+                            let csvRows = [headers.join(',')];
+                            for (let row of data) {
+                                let values = headers.map(header => {
+                                    let val = row[header] ?? '';
+                                    if (typeof val === 'string' && (val.includes(',') || val.includes('"'))) {
+                                        val = `"${val.replace(/"/g, '""')}"`;
+                                    }
+                                    return val;
+                                });
+                                csvRows.push(values.join(','));
+                            }
+                            let blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+                            let link = document.createElement('a');
+                            link.href = URL.createObjectURL(blob);
+                            link.download = fileName + '.csv';
+                            link.click();
+                            URL.revokeObjectURL(link.href);
+                            showNotification('Success', `Export ${data.length} transaksi ke CSV`, 'success', true, 3000);
+                        } else if (format === 'txt') {
+                            let txt = '=== LAPORAN KEUANGAN ===\n';
+                            txt += `Tanggal: ${new Date().toLocaleString()}\n`;
+                            txt += `Total: ${data.length} transaksi\n`;
+                            txt += '='.repeat(40) + '\n\n';
+                            data.forEach((t, i) => {
+                                txt += `[${i+1}] ${t.tanggal} - ${t.deskripsi}\n`;
+                                txt += `    Kategori: ${t.kategori} | Jenis: ${t.jenis}\n`;
+                                txt += `    Jumlah: Rp ${(t.jumlah || 0).toLocaleString('id-ID')}\n`;
+                                txt += '-'.repeat(40) + '\n';
+                            });
+                            let blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+                            let link = document.createElement('a');
+                            link.href = URL.createObjectURL(blob);
+                            link.download = fileName + '.txt';
+                            link.click();
+                            URL.revokeObjectURL(link.href);
+                            showNotification('Success', `Export ${data.length} transaksi ke TXT`, 'success', true, 3000);
+                        } else if (format === 'excel') {
+                            if (typeof XLSX === 'undefined') {
+                                showNotification('Error', 'Library Excel tidak tersedia!', 'error', true, 3000);
+                                return;
+                            }
+                            let ws = XLSX.utils.json_to_sheet(data);
+                            let wb = XLSX.utils.book_new();
+                            XLSX.utils.book_append_sheet(wb, ws, 'Keuangan');
+                            XLSX.writeFile(wb, fileName + '.xlsx');
+                            showNotification('Success', `Export ${data.length} transaksi ke Excel`, 'success', true, 3000);
+                        }
+                    } catch (error) {
+                        showNotification('Error', 'Gagal export: ' + error.message, 'error', true, 3000);
+                    }
+                });
+            }
+            
+            // Import Data
+            const importBtn = document.getElementById('importDataBtn');
+            if (importBtn) importBtn.addEventListener('click', () => {
+                const importFileInput = document.getElementById('importFileInput');
+                if (importFileInput) importFileInput.click();
+            });
+            
+            const importFileInput = document.getElementById('importFileInput');
+            if (importFileInput) {
+                importFileInput.addEventListener('change', async (e) => { 
+                    if(e.target.files.length){ 
+                        let file = e.target.files[0];
+                        let ext = file.name.split('.').pop().toLowerCase();
+                        let reader = new FileReader();
+                        reader.onload = async ev => { 
+                            try { 
+                                let result;
+                                if (ext === 'json') result = importFromJSON(ev.target.result);
+                                else {
+                                    showNotification('Gagal!', 'Format tidak didukung', 'error', true, 3000);
+                                    return;
+                                }
+                                if (result.success && result.transactions && result.transactions.length > 0) {
+                                    let existing = getAllTransactions();
+                                    currentUser.transactions = [...existing, ...result.transactions];
+                                    await saveUserToAPI(currentUser);
+                                    updateAllUI(); 
+                                    showNotification('Import Sukses', `${result.count} transaksi diimpor`, 'success', true, 3000);
+                                } else {
+                                    showNotification('Gagal!', result.message || 'Tidak ada data valid', 'error', true, 3000);
+                                }
+                            } catch(err){ 
+                                showNotification('Gagal!', err.message, 'error', true, 3000); 
+                            } 
+                        };
+                        reader.readAsText(file, 'UTF-8');
+                    } 
+                });
+            }
+            
+            // Menu Navigation
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                const newItem = item.cloneNode(true);
+                if (item.parentNode) item.parentNode.replaceChild(newItem, item);
+                newItem.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = newItem.dataset.page;
+                    if (page) switchPage(page);
+                });
+            });
+            
+            // Laporan Filters
+            const laporanStartDate = document.getElementById('laporanStartDate');
+            if (laporanStartDate) laporanStartDate.addEventListener('change', (e)=>{ laporanFilter.startDate = e.target.value; renderLaporan(); });
+            
+            const laporanEndDate = document.getElementById('laporanEndDate');
+            if (laporanEndDate) laporanEndDate.addEventListener('change', (e)=>{ laporanFilter.endDate = e.target.value; renderLaporan(); });
+            
+            const laporanFilterKategori = document.getElementById('laporanFilterKategori');
+            if (laporanFilterKategori) laporanFilterKategori.addEventListener('change', (e)=>{ laporanFilter.kategori = e.target.value; renderLaporan(); });
+            
+            const laporanFilterJenis = document.getElementById('laporanFilterJenis');
+            if (laporanFilterJenis) laporanFilterJenis.addEventListener('change', (e)=>{ laporanFilter.jenis = e.target.value; renderLaporan(); });
+            
+            const resetLaporanFilter = document.getElementById('resetLaporanFilter');
+            if (resetLaporanFilter) {
+                resetLaporanFilter.addEventListener('click', () => { 
+                    laporanFilter = { startDate: '', endDate: '', kategori: 'semua', jenis: 'semua' }; 
+                    const start = document.getElementById('laporanStartDate');
+                    const end = document.getElementById('laporanEndDate');
+                    const kategori = document.getElementById('laporanFilterKategori');
+                    const jenis = document.getElementById('laporanFilterJenis');
+                    if (start) start.value=''; 
+                    if (end) end.value=''; 
+                    if (kategori) kategori.value='semua'; 
+                    if (jenis) jenis.value='semua'; 
+                    renderLaporan(); 
+                });
+            }
+            
+            const printLaporanBtn = document.getElementById('printLaporanBtn');
+            if (printLaporanBtn) printLaporanBtn.addEventListener('click', () => { window.print(); });
+            
+            const exportLaporanCSV = document.getElementById('exportLaporanCSV');
+            if (exportLaporanCSV) {
+                exportLaporanCSV.addEventListener('click', () => {
+                    let all = getAllTransactions();
+                    let filtered = [...all];
+                    if(laporanFilter.startDate) filtered = filtered.filter(t=>t.tanggal >= laporanFilter.startDate);
+                    if(laporanFilter.endDate) filtered = filtered.filter(t=>t.tanggal <= laporanFilter.endDate);
+                    if(laporanFilter.kategori !== 'semua') filtered = filtered.filter(t=>t.kategori === laporanFilter.kategori);
+                    if(laporanFilter.jenis !== 'semua') filtered = filtered.filter(t=>t.jenis === laporanFilter.jenis);
+                    let csvRows = [["Tanggal","Deskripsi","Kategori","Jenis","Jumlah"]];
+                    filtered.forEach(t=>{ csvRows.push([t.tanggal, t.deskripsi, t.kategori, t.jenis, t.jumlah]); });
+                    let csvContent = csvRows.map(row=>row.join(",")).join("\n");
+                    let blob = new Blob([csvContent], {type: 'text/csv'});
+                    let a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `laporan_keuangan.csv`; a.click();
+                    showNotification('Export CSV', 'Laporan berhasil diekspor', 'success', true, 3000);
+                });
+            }
+            
+            const analyticsTimeRange = document.getElementById('analyticsTimeRange');
+            if (analyticsTimeRange) analyticsTimeRange.addEventListener('change', () => renderAnalytics());
+            
+            // Reset Buttons
+            const resetAllDataBtn = document.getElementById('resetAllDataBtn');
+            if (resetAllDataBtn) {
+                resetAllDataBtn.addEventListener('click', () => {
+                    const confirmTitle = document.getElementById('confirmTitle');
+                    const confirmMessage = document.getElementById('confirmMessage');
+                    const confirmModal = document.getElementById('confirmModal');
+                    const confirmOkBtn = document.getElementById('confirmOkBtn');
+                    if (confirmTitle) confirmTitle.innerText = 'Reset Semua Data';
+                    if (confirmMessage) confirmMessage.innerHTML = 'Yakin reset SEMUA data? Tidak bisa dibatalkan!';
+                    if (confirmModal) confirmModal.classList.remove('hidden');
+                    if (confirmOkBtn) {
+                        confirmOkBtn.onclick = async () => {
+                            await resetAllData();
+                            if (confirmModal) confirmModal.classList.add('hidden');
+                        };
+                    }
+                });
+            }
+            
+            const resetTransaksiOnlyBtn = document.getElementById('resetTransaksiOnlyBtn');
+            if (resetTransaksiOnlyBtn) {
+                resetTransaksiOnlyBtn.addEventListener('click', () => {
+                    const confirmTitle = document.getElementById('confirmTitle');
+                    const confirmMessage = document.getElementById('confirmMessage');
+                    const confirmModal = document.getElementById('confirmModal');
+                    const confirmOkBtn = document.getElementById('confirmOkBtn');
+                    if (confirmTitle) confirmTitle.innerText = 'Reset Transaksi Saja';
+                    if (confirmMessage) confirmMessage.innerHTML = 'Yakin reset SEMUA transaksi? Poin & badge tetap ada!';
+                    if (confirmModal) confirmModal.classList.remove('hidden');
+                    if (confirmOkBtn) {
+                        confirmOkBtn.onclick = async () => {
+                            await resetTransaksiOnly();
+                            if (confirmModal) confirmModal.classList.add('hidden');
+                        };
+                    }
+                });
+            }
+            
+            const confirmCancelBtn = document.getElementById('confirmCancelBtn');
+            if (confirmCancelBtn) confirmCancelBtn.addEventListener('click', () => {
+                const confirmModal = document.getElementById('confirmModal');
+                if (confirmModal) confirmModal.classList.add('hidden');
+            });
+            
+            const confirmBackdrop = document.getElementById('confirmBackdrop');
+            if (confirmBackdrop) confirmBackdrop.addEventListener('click', () => {
+                const confirmModal = document.getElementById('confirmModal');
+                if (confirmModal) confirmModal.classList.add('hidden');
+            });
+            
+            console.log('✅ Aplikasi siap!');
+        });
+    </script>
 </body>
-</html>    
+</html>
