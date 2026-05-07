@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamified Finance | Cloud Database</title>
+    <title>Gamified Finance - Cloud Database</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -16,183 +16,168 @@
         
         /* Dark Mode */
         body.dark { background: radial-gradient(circle at 10% 20%, #0a0f1e, #050811); color: #e2e8f0; }
-        body.dark .glass-card { background: rgba(10, 20, 40, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 24px; transition: all 0.2s; }
-        body.dark .glass-card:hover { border-color: rgba(139, 92, 246, 0.6); transform: translateY(-2px); }
-        body.dark .menu-item.active { background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.1)); border-left: 3px solid #8b5cf6; color: #c084fc; }
+        body.dark .card { background: rgba(10, 20, 40, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 24px; transition: all 0.2s; }
+        body.dark .card:hover { border-color: rgba(139, 92, 246, 0.6); transform: translateY(-2px); }
+        body.dark .menu-item.active { background: rgba(139, 92, 246, 0.2); border-left: 3px solid #8b5cf6; color: #c084fc; }
         body.dark .menu-item:hover:not(.active) { background: rgba(139, 92, 246, 0.1); transform: translateX(5px); }
         
         /* Light Mode */
-        body.light { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #fae8ff 100%); color: #1e293b; }
-        body.light .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
-        body.light .menu-item.active { background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.1)); border-left: 3px solid #8b5cf6; color: #5b21b6; }
-        body.light .menu-item:hover:not(.active) { background: rgba(139, 92, 246, 0.08); transform: translateX(5px); }
+        body.light { background: linear-gradient(135deg, #f0f9ff, #e0f2fe, #fae8ff); color: #1e293b; }
+        body.light .card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 24px; }
+        body.light .menu-item.active { background: rgba(139, 92, 246, 0.15); border-left: 3px solid #8b5cf6; color: #5b21b6; }
         body.light input, body.light select { background: rgba(0,0,0,0.05); border-color: rgba(139,92,246,0.3); color: #1e293b; }
         
-        /* Common */
         .menu-item { cursor: pointer; transition: all 0.2s; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
-        .page-content { display: block; width: 100%; }
-        .page-content.hidden { display: none !important; }
-        .notification { background: linear-gradient(135deg, #1e293b, #0f172a); border-left: 5px solid #8b5cf6; border-radius: 16px; padding: 14px 22px; width: 320px; margin-bottom: 10px; box-shadow: 0 15px 35px -10px rgba(0,0,0,0.4); animation: slideIn 0.35s ease forwards; backdrop-filter: blur(12px); pointer-events: auto; }
-        body.light .notification { background: linear-gradient(135deg, #ffffff, #f8fafc); }
-        .notification.success { border-left-color: #22c55e; background: linear-gradient(135deg, #14532d, #064e3b); }
-        .notification.warning { border-left-color: #f59e0b; background: linear-gradient(135deg, #451a03, #422006); }
-        .notification.error { border-left-color: #ef4444; background: linear-gradient(135deg, #7f1d1d, #450a0a); }
-        .notification.achievement { border-left-color: #f59e0b; background: linear-gradient(135deg, #451a03, #422006); animation: slideIn 0.35s ease, pulse 0.5s ease; }
-        
-        @keyframes slideIn { 0% { transform: translateX(100%) scale(0.9); opacity: 0; } 100% { transform: translateX(0) scale(1); opacity: 1; } }
-        @keyframes slideOut { 0% { transform: translateX(0) scale(1); opacity: 1; } 100% { transform: translateX(100%) scale(0.9); opacity: 0; } }
-        @keyframes pulse { 0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245,158,11,0.4); } 50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(245,158,11,0); } }
-        
-        .notification.hide { animation: slideOut 0.3s ease forwards; }
-        .badge-kategori { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
-        body.dark .badge-kategori.kebutuhan-pokok { background: #854d0e; color: #fef08a; }
-        body.dark .badge-kategori.belanja { background: #9a3412; color: #fed7aa; }
-        body.dark .badge-kategori.healing { background: #6b21a5; color: #e9d5ff; }
-        body.dark .badge-kategori.penghasilan { background: #1e3a5f; color: #bae6fd; }
-        body.dark .badge-kategori.transport { background: #14532d; color: #bbf7d0; }
-        body.light .badge-kategori.kebutuhan-pokok { background: #eab308; color: #1e293b; }
-        body.light .badge-kategori.belanja { background: #f97316; color: white; }
-        body.light .badge-kategori.healing { background: #a855f7; color: white; }
-        body.light .badge-kategori.penghasilan { background: #3b82f6; color: white; }
-        body.light .badge-kategori.transport { background: #22c55e; color: white; }
-        
-        .achievement-bar-bg { background: linear-gradient(90deg, #fbbf24, #f59e0b, #d97706); border-radius: 30px; transition: width 0.5s ease; }
-        .level-badge { background: linear-gradient(135deg, #fbbf24, #f59e0b); border-radius: 20px; box-shadow: 0 0 15px rgba(245,158,11,0.5); }
-        .achievement-float { position: fixed; pointer-events: none; animation: floatUp 1s ease-out forwards; font-weight: bold; z-index: 1000; }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-50px) scale(1.2); } }
-        
-        .modal-backdrop { background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); position: fixed; inset: 0; z-index: 998; }
-        input:focus, select:focus { outline: none; border-color: #8b5cf6; box-shadow: 0 0 0 2px rgba(139,92,246,0.3); }
+        .page { display: none; }
+        .page.active { display: block; }
+        .notification { position: fixed; top: 20px; right: 20px; z-index: 1000; padding: 12px 20px; border-radius: 12px; animation: slideIn 0.3s ease; background: #1e293b; border-left: 5px solid #8b5cf6; color: white; }
+        .notification.success { border-left-color: #22c55e; background: #14532d; }
+        .notification.error { border-left-color: #ef4444; background: #7f1d1d; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .badge-cat { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+        body.dark .badge-cat.income { background: #1e3a5f; color: #bae6fd; }
+        body.dark .badge-cat.expense { background: #6b21a5; color: #e9d5ff; }
+        body.light .badge-cat.income { background: #3b82f6; color: white; }
+        body.light .badge-cat.expense { background: #a855f7; color: white; }
+        .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 998; }
+        .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999; width: 90%; max-width: 450px; }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: #1e1e2e; }
         ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 10px; }
-        .gradient-text { background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        
-        @media print { body * { visibility: hidden; } #pageLaporan, #pageLaporan * { visibility: visible; } #pageLaporan { position: absolute; top: 0; left: 0; width: 100%; } }
+        .level-badge { background: linear-gradient(135deg, #fbbf24, #f59e0b); border-radius: 20px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
+        .achievement-bar { background: linear-gradient(90deg, #fbbf24, #f59e0b, #d97706); border-radius: 30px; height: 8px; transition: width 0.5s; }
     </style>
 </head>
 <body class="dark">
 
-<div id="notificationContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none" style="min-width: 320px;"></div>
+<div id="notifContainer" style="position:fixed; top:20px; right:20px; z-index:1000;"></div>
 
 <!-- LOGIN PAGE -->
-<div id="loginContainer" class="min-h-screen flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-md p-8">
-        <div class="text-center mb-6">
-            <i class="fas fa-gamepad text-5xl text-purple-400"></i>
-            <h2 class="text-2xl font-bold mt-3 gradient-text">Gamified Finance</h2>
-            <p class="text-gray-400 text-sm">Cloud Database | Akses dari Mana Saja</p>
+<div id="loginPage" class="page active">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="card w-full max-w-md p-8">
+            <div class="text-center mb-6">
+                <i class="fas fa-cloud-upload-alt text-5xl text-purple-400"></i>
+                <h2 class="text-2xl font-bold mt-3 gradient-text">Gamified Finance</h2>
+                <p class="text-gray-400 text-sm">Cloud Database | Akses dari Mana Saja</p>
+            </div>
+            <div class="flex border-b border-purple-500/30 mb-6">
+                <button id="loginTabBtn" class="flex-1 py-2 text-center font-semibold text-purple-400 border-b-2 border-purple-400">Login</button>
+                <button id="registerTabBtn" class="flex-1 py-2 text-center font-semibold text-gray-400">Register</button>
+            </div>
+            <form id="loginForm">
+                <div class="mb-4"><input type="text" id="loginUsername" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Username" required></div>
+                <div class="mb-6"><input type="password" id="loginPassword" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Password" required></div>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 py-2.5 rounded-xl font-semibold">Login</button>
+            </form>
+            <form id="registerForm" class="hidden">
+                <div class="mb-3"><input type="text" id="regFullname" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Nama Lengkap" required></div>
+                <div class="mb-3"><input type="text" id="regUsername" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Username" required></div>
+                <div class="mb-3"><input type="email" id="regEmail" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Email" required></div>
+                <div class="mb-3"><input type="password" id="regPassword" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Password (min.6)" required></div>
+                <div class="mb-5"><input type="password" id="regConfirm" class="w-full bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Konfirmasi Password" required></div>
+                <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 py-2.5 rounded-xl font-semibold">Daftar</button>
+            </form>
         </div>
-        <div class="flex border-b border-purple-500/30 mb-6">
-            <button id="loginTab" class="flex-1 py-2 text-center font-semibold text-purple-400 border-b-2 border-purple-400">Login</button>
-            <button id="registerTab" class="flex-1 py-2 text-center font-semibold text-gray-400">Register</button>
+    </div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div id="dashboardPage" class="page" style="display:none">
+    <div class="flex min-h-screen">
+        <!-- SIDEBAR -->
+        <div class="fixed left-0 top-0 h-full w-64 card rounded-none border-l-0 border-t-0 border-b-0 z-20 hidden lg:block overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center gap-3 mb-8"><i class="fas fa-trophy text-3xl text-yellow-400"></i><span class="text-xl font-bold">Game<span class="text-purple-400">Finance</span></span></div>
+                <div class="mb-6 pb-4 border-b border-white/10">
+                    <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center"><i class="fas fa-user text-white"></i></div><div><p id="sidebarName" class="font-semibold">User</p><p id="sidebarEmail" class="text-xs text-gray-400">email</p></div></div>
+                </div>
+                <nav>
+                    <div class="menu-item active" data-page="dashboard"><i class="fas fa-home w-5"></i><span>Dashboard</span></div>
+                    <div class="menu-item" data-page="daily"><i class="fas fa-calendar-day w-5"></i><span>Daily Login</span></div>
+                    <div class="menu-item" data-page="analytics"><i class="fas fa-chart-line w-5"></i><span>Analytics</span></div>
+                    <div class="menu-item" data-page="laporan"><i class="fas fa-file-invoice-dollar w-5"></i><span>Laporan</span></div>
+                    <div class="menu-item" data-page="achievement"><i class="fas fa-medal w-5"></i><span>Achievement</span></div>
+                    <div class="menu-item" data-page="settings"><i class="fas fa-cog w-5"></i><span>Settings</span></div>
+                </nav>
+                <div class="mt-8 pt-4 border-t border-white/10">
+                    <button id="themeBtn" class="flex items-center gap-3 text-gray-400 hover:text-white w-full px-4 py-2 rounded-xl hover:bg-white/10 mb-2"><i class="fas fa-moon"></i> <span id="themeText">Dark Mode</span></button>
+                    <button id="logoutBtn" class="flex items-center gap-3 text-gray-400 hover:text-red-400 w-full px-4 py-2 rounded-xl hover:bg-red-500/20"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
         </div>
-        <form id="loginForm">
-            <div class="mb-4"><label class="block text-sm">Username</label><input type="text" id="loginUsername" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Username" required></div>
-            <div class="mb-6"><label class="block text-sm">Password</label><input type="password" id="loginPassword" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Password" required></div>
-            <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 py-2.5 rounded-xl font-semibold transition">Mulai Petualangan</button>
-            <div id="loginError" class="text-red-400 text-center mt-3 text-sm"></div>
-        </form>
-        <form id="registerForm" class="hidden">
-            <div class="mb-3"><label class="block text-sm">Nama Lengkap</label><input type="text" id="regFullname" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Nama lengkap" required></div>
-            <div class="mb-3"><label class="block text-sm">Username</label><input type="text" id="regUsername" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Username unik" required></div>
-            <div class="mb-3"><label class="block text-sm">Email</label><input type="email" id="regEmail" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="email@example.com" required></div>
-            <div class="mb-3"><label class="block text-sm">Password</label><input type="password" id="regPassword" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Minimal 6 karakter" required></div>
-            <div class="mb-5"><label class="block text-sm">Konfirmasi Password</label><input type="password" id="regConfirmPassword" class="w-full mt-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2.5" placeholder="Ulangi password" required></div>
-            <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 py-2.5 rounded-xl font-semibold transition">Daftar Sekarang</button>
-            <div id="registerError" class="text-red-400 text-center mt-3 text-sm"></div>
+
+        <!-- MAIN -->
+        <div class="lg:ml-64 flex-1 p-5">
+            <!-- DASHBOARD CONTENT -->
+            <div id="dashboardContent" class="page-content" style="display:block">
+                <div class="card p-5 mb-6" id="playerCard"></div>
+                <div class="card p-5 mb-6" id="dailyCard"></div>
+
+                <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
+                    <h1 class="text-2xl font-bold">Dompet Petualang</h1>
+                    <div class="flex gap-3">
+                        <select id="exportFormat" class="bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2 text-sm"><option value="json">JSON</option><option value="csv">CSV</option></select>
+                        <button id="exportBtn" class="card px-4 py-2 rounded-xl text-sm">Export</button>
+                        <button id="importBtn" class="card px-4 py-2 rounded-xl text-sm">Import</button>
+                        <input type="file" id="importFile" style="display:none" accept=".json">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-5 mb-8">
+                    <div class="card p-5"><p class="text-gray-400 text-sm">Total Pemasukan</p><p class="text-2xl font-bold text-emerald-400" id="totalIncome">Rp 0</p></div>
+                    <div class="card p-5"><p class="text-gray-400 text-sm">Total Pengeluaran</p><p class="text-2xl font-bold text-rose-400" id="totalExpense">Rp 0</p></div>
+                    <div class="card p-5"><p class="text-gray-400 text-sm">Saldo Akhir</p><p class="text-2xl font-bold text-sky-400" id="totalBalance">Rp 0</p></div>
+                </div>
+
+                <div class="flex gap-3 mb-4">
+                    <input type="text" id="searchInput" placeholder="Cari..." class="bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2 text-sm w-48">
+                    <button id="addTransBtn" class="bg-gradient-to-r from-purple-600 to-pink-600 px-5 py-2 rounded-xl">+ Transaksi</button>
+                </div>
+
+                <div class="card overflow-hidden">
+                    <table class="w-full text-sm"><thead class="bg-black/40"><tr><th class="p-3">Tanggal</th><th class="p-3">Deskripsi</th><th class="p-3">Kategori</th><th class="p-3">Jenis</th><th class="p-3">Jumlah</th><th class="p-3">Aksi</th></tr></thead><tbody id="transTable"></tbody></table>
+                </div>
+            </div>
+
+            <!-- DAILY LOGIN CONTENT -->
+            <div id="dailyContent" class="page-content" style="display:none">
+                <div class="card p-6"><div id="dailyDetail"></div></div>
+            </div>
+
+            <!-- ANALYTICS CONTENT -->
+            <div id="analyticsContent" class="page-content" style="display:none"><div class="card p-5">Analytics (coming soon)</div></div>
+
+            <!-- LAPORAN CONTENT -->
+            <div id="laporanContent" class="page-content" style="display:none"><div class="card p-5">Laporan (coming soon)</div></div>
+
+            <!-- ACHIEVEMENT CONTENT -->
+            <div id="achievementContent" class="page-content" style="display:none"><div class="card p-5"><div id="badgeList"></div></div></div>
+
+            <!-- SETTINGS CONTENT -->
+            <div id="settingsContent" class="page-content" style="display:none"><div class="card p-6"><button id="resetDataBtn" class="bg-red-600 px-5 py-2 rounded-xl">Reset Semua Data</button></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL TRANSACTION -->
+<div id="transModal" style="display:none; position:fixed; inset:0; z-index:1000;">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal card p-6">
+        <h3 id="modalTitle" class="text-xl font-bold mb-4">Tambah Transaksi</h3>
+        <form id="transForm">
+            <input type="hidden" id="editId">
+            <div class="mb-3"><input type="date" id="transDate" class="w-full bg-black/30 border rounded-lg px-3 py-2" required></div>
+            <div class="mb-3"><input type="text" id="transDesc" placeholder="Deskripsi" class="w-full bg-black/30 border rounded-lg px-3 py-2" required></div>
+            <div class="mb-3"><select id="transCat" class="w-full bg-black/30 border rounded-lg px-3 py-2"><option>Kebutuhan Pokok</option><option>Belanja</option><option>Healing</option><option>Penghasilan</option><option>Transport</option></select></div>
+            <div class="mb-3"><select id="transType" class="w-full bg-black/30 border rounded-lg px-3 py-2"><option value="pemasukan">Pemasukan</option><option value="pengeluaran">Pengeluaran</option></select></div>
+            <div class="mb-4"><input type="number" id="transAmount" placeholder="Jumlah" class="w-full bg-black/30 border rounded-lg px-3 py-2" required></div>
+            <button type="button" id="saveTransBtn" class="w-full bg-purple-600 py-2 rounded-xl font-semibold mb-2">Simpan</button>
+            <button type="button" id="closeModalBtn" class="w-full bg-gray-600 py-2 rounded-xl">Batal</button>
         </form>
     </div>
 </div>
 
-<!-- DASHBOARD CONTAINER -->
-<div id="dashboardContainer" class="hidden min-h-screen">
-    <aside class="fixed left-0 top-0 h-full w-72 glass-card rounded-none border-l-0 border-t-0 border-b-0 z-20 hidden lg:block overflow-y-auto">
-        <div class="p-6 flex flex-col h-full">
-            <div class="flex items-center gap-3 mb-8"><i class="fas fa-trophy text-3xl text-yellow-400"></i><span class="text-xl font-bold">Game<span class="text-purple-400">Finance</span></span></div>
-            <div class="mb-6 pb-4 border-b border-white/10"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center"><i class="fas fa-user text-white text-xl"></i></div><div><p class="font-semibold" id="sidebarUsername">User</p><p class="text-xs text-gray-400" id="sidebarEmail">email</p></div></div></div>
-            <nav class="space-y-2 flex-1">
-                <div class="menu-item" data-page="dashboard"><i class="fas fa-home w-5"></i><span>Dashboard</span></div>
-                <div class="menu-item" data-page="analytics"><i class="fas fa-chart-line w-5"></i><span>Analytics</span></div>
-                <div class="menu-item" data-page="laporan"><i class="fas fa-file-invoice-dollar w-5"></i><span>Laporan</span></div>
-                <div class="menu-item" data-page="achievement"><i class="fas fa-medal w-5"></i><span>Achievement</span></div>
-                <div class="menu-item" data-page="settings"><i class="fas fa-cog w-5"></i><span>Settings</span></div>
-            </nav>
-            <div class="mt-auto pt-4 border-t border-white/10">
-                <button id="themeToggle" class="flex items-center gap-3 text-gray-400 hover:text-white w-full px-4 py-2 rounded-xl hover:bg-white/10 transition mb-2"><i class="fas fa-moon w-5"></i> <span id="themeText">Dark Mode</span></button>
-                <button id="logoutBtnSide" class="flex items-center gap-3 text-gray-400 hover:text-red-400 w-full px-4 py-2 rounded-xl hover:bg-red-500/20 transition"><i class="fas fa-sign-out-alt w-5"></i> Logout</button>
-            </div>
-        </div>
-    </aside>
-
-    <main class="lg:ml-72 p-5 md:p-7 overflow-y-auto" style="height: 100vh; overflow-y: auto;">
-        <!-- PAGE DASHBOARD -->
-        <div id="pageDashboard" class="page-content">
-            <div class="glass-card p-5 mb-6" id="playerAchievementCard"></div>
-            <div class="glass-card p-5 mb-6" id="dailyLoginContainer"></div>
-
-            <div class="flex flex-wrap justify-between items-center mb-6 gap-3">
-                <div class="flex items-center gap-3"><i class="fas fa-wallet text-3xl text-purple-400"></i><h1 class="text-2xl md:text-3xl font-bold gradient-text">Dompet Petualang</h1></div>
-                <div class="flex gap-3">
-                    <select id="formatFile" class="glass-card px-4 py-2 rounded-xl text-sm border border-purple-500/30"><option value="json">JSON</option><option value="csv">CSV</option><option value="txt">TXT</option><option value="excel">Excel</option></select>
-                    <button id="exportDataBtn" class="glass-card px-4 py-2 rounded-xl text-sm flex items-center gap-2 hover:bg-white/10"><i class="fas fa-download"></i> Export</button>
-                    <button id="importDataBtn" class="glass-card px-4 py-2 rounded-xl text-sm flex items-center gap-2 hover:bg-white/10"><i class="fas fa-upload"></i> Import</button>
-                    <input type="file" id="importFileInput" style="display:none" accept=".json,.txt,.xlsx,.xls,.csv">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-                <div class="glass-card p-5"><p class="text-gray-400 text-sm">Total Pemasukan</p><p class="text-2xl font-bold text-emerald-400" id="totalPemasukan">Rp 0</p><div id="sparkIncome" class="mt-3 h-12"></div></div>
-                <div class="glass-card p-5"><p class="text-gray-400 text-sm">Total Pengeluaran</p><p class="text-2xl font-bold text-rose-400" id="totalPengeluaran">Rp 0</p><div id="sparkExpense" class="mt-3 h-12"></div></div>
-                <div class="glass-card p-5"><p class="text-gray-400 text-sm">Saldo Akhir</p><p class="text-2xl font-bold text-sky-400" id="saldoAkhir">Rp 0</p><div id="sparkBalance" class="mt-3 h-12"></div></div>
-            </div>
-
-            <div class="glass-card p-5 mb-8"><div class="flex justify-between items-center mb-4"><h3 class="font-semibold text-lg">Perkembangan Saldo</h3><select id="filterWaktu" class="bg-black/30 border border-purple-500/30 rounded-lg text-sm px-3 py-1.5"><option value="week">Minggu Ini</option><option value="month">Bulan Ini</option><option value="all">Semua Waktu</option></select></div><div id="lineChart"></div></div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"><div class="glass-card p-5"><h3 class="font-semibold mb-3">Top Kategori Pengeluaran</h3><div id="barChart"></div></div><div class="glass-card p-5"><h3 class="font-semibold mb-3">Komposisi Pengeluaran</h3><div id="pieChart"></div></div></div>
-
-            <div class="glass-card p-4 mb-6 flex flex-wrap gap-4 items-center justify-between">
-                <div class="flex flex-wrap gap-3"><input type="text" id="searchInput" placeholder="Cari deskripsi..." class="bg-black/30 border border-purple-500/30 rounded-xl px-4 py-2 text-sm w-48"><select id="filterKategori" class="bg-black/30 border border-purple-500/30 rounded-xl px-3 py-2 text-sm"><option value="semua">Semua Kategori</option></select><select id="filterJenis" class="bg-black/30 border border-purple-500/30 rounded-xl px-3 py-2 text-sm"><option value="semua">Semua Jenis</option><option value="pemasukan">Pemasukan</option><option value="pengeluaran">Pengeluaran</option></select></div>
-                <button id="tambahBtn" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 px-5 py-2 rounded-xl flex items-center gap-2 transition"><i class="fas fa-plus"></i> Transaksi Baru</button>
-            </div>
-
-            <div class="glass-card overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-sm"><thead class="bg-black/40 border-b border-white/10"><tr class="text-gray-300"><th class="p-4 text-left">Tanggal</th><th class="p-4 text-left">Deskripsi</th><th class="p-4 text-left">Kategori</th><th class="p-4 text-left">Jenis</th><th class="p-4 text-right">Jumlah</th><th class="p-4 text-center">Aksi</th></tr></thead><tbody id="transaksiTableBody"></tbody></table></div></div>
-        </div>
-
-        <!-- PAGE ANALYTICS -->
-        <div id="pageAnalytics" class="page-content hidden">
-            <div class="flex items-center gap-5 mb-6"><i class="fas fa-chart-pie text-3xl text-purple-400"></i><div><h1 class="text-2xl md:text-3xl font-bold gradient-text">Analytics Keuangan</h1><p class="text-gray-400">Wawasan dari data transaksi Anda</p></div></div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8"><div class="glass-card p-5"><h3 class="font-semibold">Pengeluaran Terbesar</h3><p class="text-lg mt-2" id="insightTopCatText">-</p></div><div class="glass-card p-5"><h3 class="font-semibold">Tren Pengeluaran</h3><p class="text-lg mt-2" id="insightTrendText">-</p></div><div class="glass-card p-5"><h3 class="font-semibold">Status Keuangan</h3><p class="text-lg mt-2" id="insightBorosText">-</p></div><div class="glass-card p-5"><h3 class="font-semibold">Saran Cerdas</h3><p class="text-lg mt-2" id="insightSaranText">-</p></div></div>
-            <div class="glass-card p-5 mb-8"><h3 class="font-semibold mb-3">Distribusi Pengeluaran per Kategori</h3><div id="analyticsPieChart" style="height: 350px;"></div></div>
-            <div class="glass-card p-5 mb-8"><div class="flex justify-between items-center mb-4"><h3 class="font-semibold">Perbandingan Pemasukan & Pengeluaran</h3><select id="analyticsTimeRange" class="bg-black/30 border border-purple-500/30 rounded-lg text-sm px-3 py-1.5"><option value="week">Minggu Ini</option><option value="month">Bulan Ini</option><option value="all">Semua Waktu</option></select></div><div id="analyticsBarChart" style="height: 350px;"></div></div>
-            <div class="glass-card p-5"><h3 class="font-semibold mb-3">Alokasi Keuangan (50/30/20)</h3><div class="grid grid-cols-3 gap-4 text-center"><div><div class="text-2xl font-bold text-emerald-400" id="pctKebutuhan">0%</div><div class="text-xs">Kebutuhan</div></div><div><div class="text-2xl font-bold text-yellow-400" id="pctKeinginan">0%</div><div class="text-xs">Keinginan</div></div><div><div class="text-2xl font-bold text-sky-400" id="pctTabungan">0%</div><div class="text-xs">Tabungan</div></div></div><div class="mt-3 h-2 bg-gray-700 rounded-full overflow-hidden flex"><div id="barKebutuhan" class="bg-emerald-400 h-full" style="width:0%"></div><div id="barKeinginan" class="bg-yellow-400 h-full" style="width:0%"></div><div id="barTabungan" class="bg-sky-400 h-full" style="width:0%"></div></div></div>
-        </div>
-
-        <!-- PAGE LAPORAN -->
-        <div id="pageLaporan" class="page-content hidden">
-            <div class="flex flex-wrap justify-between items-center mb-6 gap-3"><div class="flex items-center gap-3"><i class="fas fa-file-invoice-dollar text-3xl text-purple-400"></i><h1 class="text-2xl font-bold gradient-text">Laporan Transaksi</h1></div><div class="flex gap-3"><button id="printLaporanBtn" class="glass-card px-4 py-2 rounded-xl text-sm flex items-center gap-2"><i class="fas fa-print"></i> Print</button><button id="exportLaporanCSV" class="glass-card px-4 py-2 rounded-xl text-sm flex items-center gap-2"><i class="fas fa-file-csv"></i> Export CSV</button></div></div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"><div class="glass-card p-4"><p class="text-gray-400 text-sm">Total Pemasukan</p><p class="text-xl font-bold text-emerald-400" id="laporanTotalPemasukan">Rp 0</p></div><div class="glass-card p-4"><p class="text-gray-400 text-sm">Total Pengeluaran</p><p class="text-xl font-bold text-rose-400" id="laporanTotalPengeluaran">Rp 0</p></div><div class="glass-card p-4"><p class="text-gray-400 text-sm">Saldo Akhir</p><p class="text-xl font-bold text-sky-400" id="laporanSaldo">Rp 0</p></div></div>
-            <div class="glass-card p-4 mb-6 flex flex-wrap gap-4 items-end"><div><label class="block text-xs text-gray-400">Dari Tanggal</label><input type="date" id="laporanStartDate" class="bg-black/30 border border-purple-500/30 rounded-lg px-3 py-1.5"></div><div><label class="block text-xs text-gray-400">Sampai Tanggal</label><input type="date" id="laporanEndDate" class="bg-black/30 border border-purple-500/30 rounded-lg px-3 py-1.5"></div><div><label class="block text-xs text-gray-400">Kategori</label><select id="laporanFilterKategori" class="bg-black/30 border border-purple-500/30 rounded-lg px-3 py-1.5"><option value="semua">Semua</option></select></div><div><label class="block text-xs text-gray-400">Jenis</label><select id="laporanFilterJenis" class="bg-black/30 border border-purple-500/30 rounded-lg px-3 py-1.5"><option value="semua">Semua</option><option value="pemasukan">Pemasukan</option><option value="pengeluaran">Pengeluaran</option></select></div><button id="resetLaporanFilter" class="bg-purple-700 px-4 py-1.5 rounded-lg text-sm"><i class="fas fa-undo-alt mr-1"></i> Reset</button></div>
-            <div class="glass-card overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-sm"><thead class="bg-black/40 border-b border-white/10"><tr><th class="p-3 text-left">Tanggal</th><th class="p-3 text-left">Deskripsi</th><th class="p-3 text-left">Kategori</th><th class="p-3 text-left">Jenis</th><th class="p-3 text-right">Jumlah</th></tr></thead><tbody id="laporanTableBody"></tbody></table></div></div>
-        </div>
-
-        <!-- PAGE ACHIEVEMENT -->
-        <div id="pageAchievement" class="page-content hidden"><div class="flex items-center gap-3 mb-6"><i class="fas fa-medal text-3xl text-yellow-400"></i><h1 class="text-2xl font-bold gradient-text">Achievement & Badge</h1></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="badgeContainer"></div></div>
-
-        <!-- PAGE SETTINGS -->
-        <div id="pageSettings" class="page-content hidden"><div class="flex items-center gap-3 mb-6"><i class="fas fa-cog text-3xl text-purple-400"></i><h1 class="text-2xl font-bold gradient-text">Pengaturan</h1></div><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="glass-card p-6"><h2 class="text-xl font-semibold mb-4">Reset Data</h2><p class="text-gray-400 text-sm mb-4">Reset semua data ke kondisi awal</p><div class="flex gap-3"><button id="resetAllDataBtn" class="bg-red-600 hover:bg-red-700 px-5 py-2.5 rounded-xl">Reset Semua</button><button id="resetTransaksiOnlyBtn" class="bg-orange-600 hover:bg-orange-700 px-5 py-2.5 rounded-xl">Reset Transaksi</button></div></div><div class="glass-card p-6"><h2 class="text-xl font-semibold mb-4">Informasi</h2><div class="space-y-2 text-sm"><p><strong>Gamified Finance</strong> v4.0 - Cloud Version</p><p>Data tersimpan di GitHub Cloud</p><p>Akses dari mana saja dengan internet</p><p>Import/Export: JSON, Excel, CSV, TXT</p></div></div></div></div>
-    </main>
-</div>
-
-<!-- MODAL TRANSACTION -->
-<div id="transaksiModal" class="fixed inset-0 flex items-center justify-center z-50 hidden"><div class="absolute inset-0 modal-backdrop" id="modalBackdrop"></div><div class="glass-card w-full max-w-md mx-4 p-6 relative z-10"><div class="flex justify-between items-center mb-4"><h3 id="modalTitle" class="text-xl font-bold">Tambah Transaksi</h3><button id="closeModalBtn" class="text-gray-400 hover:text-white"><i class="fas fa-times"></i></button></div><form id="transaksiForm"><input type="hidden" id="editId"><div class="mb-3"><label class="block text-sm mb-1">Tanggal</label><input type="date" id="tanggal" class="w-full bg-black/40 border border-purple-500/30 rounded-lg px-3 py-2" required></div><div class="mb-3"><label class="block text-sm mb-1">Deskripsi</label><input type="text" id="deskripsi" class="w-full bg-black/40 border border-purple-500/30 rounded-lg px-3 py-2" required></div><div class="mb-3"><label class="block text-sm mb-1">Kategori</label><select id="kategori" class="w-full bg-black/40 border border-purple-500/30 rounded-lg px-3 py-2"><option value="Kebutuhan Pokok">Kebutuhan Pokok</option><option value="Belanja">Belanja</option><option value="Healing">Healing</option><option value="Penghasilan">Penghasilan</option><option value="Transport">Transport</option></select></div><div class="mb-3"><label class="block text-sm mb-1">Jenis</label><select id="jenis" class="w-full bg-black/40 border border-purple-500/30 rounded-lg px-3 py-2"><option value="pemasukan">Pemasukan</option><option value="pengeluaran">Pengeluaran</option></select></div><div class="mb-4"><label class="block text-sm mb-1">Jumlah (Rp)</label><input type="number" id="jumlah" class="w-full bg-black/40 border border-purple-500/30 rounded-lg px-3 py-2" required></div><button type="button" id="saveBtn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 py-2 rounded-xl font-semibold transition">Simpan</button></form></div></div>
-
-<!-- MODAL CONFIRM -->
-<div id="confirmModal" class="fixed inset-0 flex items-center justify-center z-50 hidden"><div class="absolute inset-0 modal-backdrop" id="confirmBackdrop"></div><div class="glass-card w-full max-w-md mx-4 p-6 relative z-10"><div class="text-center mb-4"><i class="fas fa-question-circle text-5xl text-yellow-400 mb-3"></i><h3 id="confirmTitle" class="text-xl font-bold">Konfirmasi</h3><p id="confirmMessage" class="text-gray-400 mt-2">Apakah Anda yakin?</p></div><div class="flex gap-3"><button id="confirmCancelBtn" class="flex-1 bg-gray-600 hover:bg-gray-700 py-2 rounded-xl">Batal</button><button id="confirmOkBtn" class="flex-1 bg-red-600 hover:bg-red-700 py-2 rounded-xl">Ya, Reset!</button></div></div></div>
-
-<audio id="soundSuccess" preload="auto"><source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
-<audio id="soundLevelUp" preload="auto"><source src="https://www.soundjay.com/misc/sounds/fanfare-6.mp3"></audio>
-
 <script src="app.js"></script>
 </body>
-</html>
+</html>    
