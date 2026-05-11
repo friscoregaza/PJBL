@@ -657,13 +657,6 @@
 
     <script>
         // ========== MOCKAPI.IO CONFIGURATION ==========
-        // GANTI DENGAN URL MOCKAPI KAMU!
-        // Cara dapatkan URL: 
-        // 1. Buka https://mockapi.io
-        // 2. Login dengan Google/GitHub
-        // 3. Buat project baru
-        // 4. Buat resource "users"
-        // 5. Copy URL endpointnya
         const MOCKAPI_URL = 'https://69fbfacffce564e2591721b3.mockapi.io/api/users';
         
         // ========== GLOBAL VARIABLES ==========
@@ -1544,7 +1537,7 @@
             let tbody = document.getElementById('laporanTableBody');
             if (!tbody) return;
             
-            if(filtered.length===0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8">Tidak ada数据</td></tr>'; return; }
+            if(filtered.length===0) { tbody.innerHTML = '<td><td colspan="5" class="text-center py-8">Tidak ada data</td></tr>'; return; }
             
             let html = '';
             filtered.sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal)).forEach(t=>{
@@ -1629,6 +1622,177 @@
             document.querySelectorAll('.menu-item').forEach(menu => menu.classList.remove('active'));
             const active = document.querySelector(`.menu-item[data-page="${page}"]`);
             if (active) active.classList.add('active');
+        }
+        
+        // ========== IMPORT FUNCTIONS (SUPPORT JSON, CSV, EXCEL, TXT) ==========
+        function parseAmount(value) {
+            if (value === undefined || value === null || value === '') return 0;
+            if (typeof value === 'number') return Math.abs(value);
+            let str = String(value).trim().replace(/[Rp\s\$,]/gi, '');
+            let amount = parseFloat(str);
+            return isNaN(amount) ? 0 : Math.abs(amount);
+        }
+        
+        function parseDateFromAnyFormat(value) {
+            if (!value) return new Date().toISOString().slice(0, 10);
+            let dateObj = new Date(value);
+            if (!isNaN(dateObj.getTime())) return dateObj.toISOString().slice(0, 10);
+            return new Date().toISOString().slice(0, 10);
+        }
+        
+        function importFromJSON(jsonData) {
+            try {
+                let imported = JSON.parse(jsonData);
+                if (!Array.isArray(imported)) return { success: false, message: "Format JSON harus berupa array" };
+                let transactions = [];
+                for (let i = 0; i < imported.length; i++) {
+                    let item = imported[i];
+                    if (!item.tanggal || !item.jumlah) continue;
+                    transactions.push({
+                        id: Date.now() + Math.random() + i,
+                        tanggal: parseDateFromAnyFormat(item.tanggal),
+                        deskripsi: item.deskripsi || 'Transaksi import',
+                        kategori: item.kategori || 'Kebutuhan Pokok',
+                        jenis: item.jenis === 'pemasukan' ? 'pemasukan' : 'pengeluaran',
+                        jumlah: parseAmount(item.jumlah)
+                    });
+                }
+                if (transactions.length === 0) return { success: false, message: "Tidak ada data transaksi yang valid" };
+                return { success: true, transactions: transactions, count: transactions.length };
+            } catch (e) {
+                return { success: false, message: "Format JSON tidak valid: " + e.message };
+            }
+        }
+        
+        function importFromCSV(csvText) {
+            try {
+                const lines = csvText.split(/\r?\n/);
+                if (lines.length === 0) return { success: false, message: "File CSV kosong" };
+                
+                const headers = lines[0].split(',').map(h => h.replace(/["']/g, '').trim().toLowerCase());
+                const requiredFields = ['tanggal', 'jumlah'];
+                const hasRequired = requiredFields.every(f => headers.includes(f));
+                
+                if (!hasRequired) {
+                    return { success: false, message: "CSV harus memiliki kolom: tanggal, jumlah (dan opsional: deskripsi, kategori, jenis)" };
+                }
+                
+                let transactions = [];
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    
+                    const values = lines[i].split(',').map(v => v.replace(/["']/g, '').trim());
+                    const row = {};
+                    headers.forEach((h, idx) => { row[h] = values[idx] || ''; });
+                    
+                    if (!row.tanggal || !row.jumlah) continue;
+                    
+                    let jenis = row.jenis || 'pengeluaran';
+                    if (jenis.toLowerCase() === 'income' || jenis.toLowerCase() === 'pemasukan') jenis = 'pemasukan';
+                    else if (jenis.toLowerCase() === 'expense' || jenis.toLowerCase() === 'pengeluaran') jenis = 'pengeluaran';
+                    else jenis = 'pengeluaran';
+                    
+                    transactions.push({
+                        id: Date.now() + Math.random() + i,
+                        tanggal: parseDateFromAnyFormat(row.tanggal),
+                        deskripsi: row.deskripsi || 'Import dari CSV',
+                        kategori: row.kategori || 'Kebutuhan Pokok',
+                        jenis: jenis,
+                        jumlah: parseAmount(row.jumlah)
+                    });
+                }
+                
+                if (transactions.length === 0) return { success: false, message: "Tidak ada data transaksi yang valid di CSV" };
+                return { success: true, transactions: transactions, count: transactions.length };
+            } catch (e) {
+                return { success: false, message: "Gagal parsing CSV: " + e.message };
+            }
+        }
+        
+        function importFromExcel(arrayBuffer) {
+            try {
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const data = XLSX.utils.sheet_to_json(worksheet);
+                
+                if (!data || data.length === 0) return { success: false, message: "File Excel kosong" };
+                
+                let transactions = [];
+                for (let i = 0; i < data.length; i++) {
+                    const row = data[i];
+                    const tanggal = row.tanggal || row.Tanggal || row.date || row.Date;
+                    const jumlah = row.jumlah || row.Jumlah || row.amount || row.Amount;
+                    
+                    if (!tanggal || !jumlah) continue;
+                    
+                    let jenis = row.jenis || row.Jenis || 'pengeluaran';
+                    if (String(jenis).toLowerCase() === 'income' || String(jenis).toLowerCase() === 'pemasukan') jenis = 'pemasukan';
+                    else if (String(jenis).toLowerCase() === 'expense' || String(jenis).toLowerCase() === 'pengeluaran') jenis = 'pengeluaran';
+                    else jenis = 'pengeluaran';
+                    
+                    transactions.push({
+                        id: Date.now() + Math.random() + i,
+                        tanggal: parseDateFromAnyFormat(tanggal),
+                        deskripsi: row.deskripsi || row.Deskripsi || 'Import dari Excel',
+                        kategori: row.kategori || row.Kategori || 'Kebutuhan Pokok',
+                        jenis: jenis,
+                        jumlah: parseAmount(jumlah)
+                    });
+                }
+                
+                if (transactions.length === 0) return { success: false, message: "Tidak ada data transaksi yang valid di Excel" };
+                return { success: true, transactions: transactions, count: transactions.length };
+            } catch (e) {
+                return { success: false, message: "Gagal parsing Excel: " + e.message };
+            }
+        }
+        
+        function importFromTXT(txtText) {
+            try {
+                const lines = txtText.split(/\r?\n/);
+                let transactions = [];
+                let lineNum = 0;
+                
+                for (const line of lines) {
+                    lineNum++;
+                    if (!line.trim()) continue;
+                    
+                    let parts = line.split(/\t|\|/);
+                    if (parts.length < 2) parts = line.split(',');
+                    
+                    if (parts.length >= 2) {
+                        let tanggal = parts[0].trim();
+                        let jumlah = parts[1].trim();
+                        
+                        let deskripsi = parts[2] ? parts[2].trim() : `Transaksi import ${lineNum}`;
+                        let kategori = parts[3] ? parts[3].trim() : 'Kebutuhan Pokok';
+                        let jenis = parts[4] ? parts[4].trim() : 'pengeluaran';
+                        
+                        if (jenis.toLowerCase() === 'income' || jenis.toLowerCase() === 'pemasukan') jenis = 'pemasukan';
+                        else if (jenis.toLowerCase() === 'expense' || jenis.toLowerCase() === 'pengeluaran') jenis = 'pengeluaran';
+                        else jenis = 'pengeluaran';
+                        
+                        let jumlahNum = parseAmount(jumlah);
+                        
+                        if (tanggal && jumlahNum > 0) {
+                            transactions.push({
+                                id: Date.now() + Math.random() + lineNum,
+                                tanggal: parseDateFromAnyFormat(tanggal),
+                                deskripsi: deskripsi,
+                                kategori: kategori,
+                                jenis: jenis,
+                                jumlah: jumlahNum
+                            });
+                        }
+                    }
+                }
+                
+                if (transactions.length === 0) return { success: false, message: "Tidak ada data transaksi yang valid di TXT" };
+                return { success: true, transactions: transactions, count: transactions.length };
+            } catch (e) {
+                return { success: false, message: "Gagal parsing TXT: " + e.message };
+            }
         }
         
         // ========== GLOBAL FUNCTIONS FOR HTML ==========
@@ -1717,45 +1881,6 @@
             soundSuccess = document.getElementById('soundSuccess');
             soundLevelUp = document.getElementById('soundLevelUp');
             soundNotification = document.getElementById('soundNotification');
-        }
-        
-        function parseAmount(value) {
-            if (value === undefined || value === null || value === '') return 0;
-            if (typeof value === 'number') return Math.abs(value);
-            let str = String(value).trim().replace(/[Rp\s\$,]/gi, '');
-            let amount = parseFloat(str);
-            return isNaN(amount) ? 0 : Math.abs(amount);
-        }
-        
-        function parseDateFromAnyFormat(value) {
-            if (!value) return new Date().toISOString().slice(0, 10);
-            let dateObj = new Date(value);
-            if (!isNaN(dateObj.getTime())) return dateObj.toISOString().slice(0, 10);
-            return new Date().toISOString().slice(0, 10);
-        }
-        
-        function importFromJSON(jsonData) {
-            try {
-                let imported = JSON.parse(jsonData);
-                if (!Array.isArray(imported)) return { success: false, message: "Format JSON harus berupa array" };
-                let transactions = [];
-                for (let i = 0; i < imported.length; i++) {
-                    let item = imported[i];
-                    if (!item.tanggal || !item.jumlah) continue;
-                    transactions.push({
-                        id: Date.now() + Math.random() + i,
-                        tanggal: parseDateFromAnyFormat(item.tanggal),
-                        deskripsi: item.deskripsi || 'Transaksi import',
-                        kategori: item.kategori || 'Kebutuhan Pokok',
-                        jenis: item.jenis === 'pemasukan' ? 'pemasukan' : 'pengeluaran',
-                        jumlah: parseAmount(item.jumlah)
-                    });
-                }
-                if (transactions.length === 0) return { success: false, message: "Tidak ada data transaksi yang valid" };
-                return { success: true, transactions: transactions, count: transactions.length };
-            } catch (e) {
-                return { success: false, message: "Format JSON tidak valid: " + e.message };
-            }
         }
         
         // ========== DOM CONTENT LOADED ==========
@@ -2024,7 +2149,7 @@
                 });
             }
             
-            // Import Data
+            // ========== IMPORT DATA (SUPPORT JSON, CSV, EXCEL, TXT) ==========
             const importBtn = document.getElementById('importDataBtn');
             if (importBtn) importBtn.addEventListener('click', () => {
                 const importFileInput = document.getElementById('importFileInput');
@@ -2037,29 +2162,61 @@
                     if(e.target.files.length){ 
                         let file = e.target.files[0];
                         let ext = file.name.split('.').pop().toLowerCase();
+                        let fileName = file.name;
                         let reader = new FileReader();
-                        reader.onload = async ev => { 
+                        
+                        reader.onload = async (ev) => { 
                             try { 
-                                let result;
-                                if (ext === 'json') result = importFromJSON(ev.target.result);
-                                else {
-                                    showNotification('Gagal!', 'Format tidak didukung', 'error', true, 3000);
+                                let result = null;
+                                let content = ev.target.result;
+                                
+                                showNotification('Info', `Memproses file ${fileName}...`, 'info', true, 2000);
+                                
+                                // Pilih fungsi import berdasarkan ekstensi file
+                                if (ext === 'json') {
+                                    result = importFromJSON(content);
+                                } else if (ext === 'csv') {
+                                    result = importFromCSV(content);
+                                } else if (ext === 'xlsx' || ext === 'xls') {
+                                    // Untuk file Excel, perlu diolah sebagai array buffer
+                                    if (content instanceof ArrayBuffer) {
+                                        result = importFromExcel(content);
+                                    } else {
+                                        // Jika tidak, baca ulang sebagai array buffer
+                                        const arrayBuffer = await file.arrayBuffer();
+                                        result = importFromExcel(arrayBuffer);
+                                    }
+                                } else if (ext === 'txt') {
+                                    result = importFromTXT(content);
+                                } else {
+                                    showNotification('Gagal!', `Format .${ext} tidak didukung. Gunakan: JSON, CSV, Excel, atau TXT`, 'error', true, 4000);
                                     return;
                                 }
-                                if (result.success && result.transactions && result.transactions.length > 0) {
+                                
+                                if (result && result.success && result.transactions && result.transactions.length > 0) {
                                     let existing = getAllTransactions();
                                     currentUser.transactions = [...existing, ...result.transactions];
                                     await saveUserToAPI(currentUser);
                                     updateAllUI(); 
-                                    showNotification('Import Sukses', `${result.count} transaksi diimpor`, 'success', true, 3000);
+                                    showNotification('Import Sukses!', `${result.count} transaksi berhasil diimpor dari ${fileName}`, 'success', true, 4000);
                                 } else {
-                                    showNotification('Gagal!', result.message || 'Tidak ada data valid', 'error', true, 3000);
+                                    showNotification('Gagal!', result?.message || 'Tidak ada data valid dalam file', 'error', true, 4000);
                                 }
                             } catch(err){ 
-                                showNotification('Gagal!', err.message, 'error', true, 3000); 
+                                console.error('Import error:', err);
+                                showNotification('Gagal!', 'Terjadi kesalahan saat membaca file: ' + err.message, 'error', true, 5000); 
+                            } finally {
+                                // Reset input file
+                                importFileInput.value = '';
                             } 
                         };
-                        reader.readAsText(file, 'UTF-8');
+                        
+                        // Baca file sesuai tipe
+                        if (ext === 'xlsx' || ext === 'xls') {
+                            reader.readAsArrayBuffer(file);
+                        } else {
+                            reader.readAsText(file, 'UTF-8');
+                        }
                     } 
                 });
             }
