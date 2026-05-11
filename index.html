@@ -353,7 +353,6 @@
             
             <div id="pageDashboard" class="page-content">
                 <div class="glass-card p-5 mb-6" id="playerAchievementCard"></div>
-                <div class="glass-card p-5 mb-6" id="dailyLoginContainer"></div>
 
                 <div class="flex flex-wrap justify-between items-center mb-6 gap-3">
                     <div class="flex items-center gap-3">
@@ -566,8 +565,7 @@
                                 <tr><th class="p-3 text-left">Tanggal</th><th class="p-3 text-left">Deskripsi</th><th class="p-3 text-left">Kategori</th><th class="p-3 text-left">Jenis</th><th class="p-3 text-right">Jumlah</th></tr>
                             </thead>
                             <tbody id="laporanTableBody"></tbody>
-                        </table>
-                    </div>
+                        </table>                    </div>
                 </div>
             </div>
 
@@ -879,7 +877,6 @@
             let newBadges = [];
             let badgeAdded = false;
             
-            // Achievement berdasarkan Points (tanpa tabungan)
             if (achievementPoints >= 10 && !currentUser.badges.includes('points10')) {
                 currentUser.badges.push('points10');
                 newBadges.push('10 Achievement Points');
@@ -911,7 +908,6 @@
                 badgeAdded = true;
             }
             
-            // Badge Transaksi
             if (allTrans.length >= 10 && !currentUser.badges.includes('trans10')) {
                 currentUser.badges.push('trans10');
                 newBadges.push('10 Transaksi');
@@ -931,7 +927,6 @@
                 badgeAdded = true;
             }
             
-            // Badge Streak
             const dailyData = currentUser.dailyLogin;
             if (dailyData && dailyData.streak >= 7 && !currentUser.badges.includes('streak7')) {
                 currentUser.badges.push('streak7');
@@ -986,7 +981,7 @@
             return currentUser ? currentUser.transactions || [] : [];
         }
         
-        // ========== DAILY LOGIN SYSTEM (REWARD BARU) ==========
+        // ========== DAILY LOGIN SYSTEM (REWARD SESUAI PERMINTAAN) ==========
         async function claimDailyReward() {
             if (!currentUser) return false;
             
@@ -1018,7 +1013,7 @@
                 newStreak = 1;
             }
             
-            // REWARD SYSTEM BARU:
+            // REWARD SYSTEM SESUAI PERMINTAAN:
             // Hari 1-2: 1 point
             // Hari 3-6: 4 points
             // Hari 7-9: 6 points
@@ -1051,66 +1046,10 @@
             
             showNotification('Daily Reward!', rewardMessage, 'success', true, 5000);
             playSound('success');
-            updateDailyLoginUI();
+            updateDailyLoginDetailPage();
             updatePlayerUI();
             
             return true;
-        }
-        
-        function updateDailyLoginUI() {
-            const container = document.getElementById('dailyLoginContainer');
-            if (!container || !currentUser) return;
-            
-            const dailyData = currentUser.dailyLogin || { streak: 0, totalLogins: 0 };
-            const streak = dailyData.streak || 0;
-            const totalLogins = dailyData.totalLogins || 0;
-            const today = new Date().toDateString();
-            const canClaim = dailyData.lastClaimed !== today;
-            
-            let nextReward = 1;
-            if (streak >= 9) nextReward = 10;
-            else if (streak >= 6) nextReward = 6;
-            else if (streak >= 2) nextReward = 4;
-            else nextReward = 1;
-            
-            container.innerHTML = `
-                <div class="flex items-center justify-between flex-wrap gap-4">
-                    <div class="flex items-center gap-4">
-                        <div class="w-16 h-16 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center">
-                            <i class="fas fa-calendar-check text-white text-2xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-lg">Daily Login Reward</h3>
-                            <p class="text-sm text-gray-400">Login setiap hari untuk mendapatkan bonus!</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-6">
-                        <div class="text-center">
-                            <p class="text-2xl font-bold text-yellow-400">${streak}</p>
-                            <p class="text-xs text-gray-400">Streak</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-2xl font-bold text-purple-400">${totalLogins}</p>
-                            <p class="text-xs text-gray-400">Total Login</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-2xl font-bold text-green-400">+${nextReward}</p>
-                            <p class="text-xs text-gray-400">Next Reward</p>
-                        </div>
-                    </div>
-                    ${canClaim ? 
-                        `<button id="claimDailyBtn" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 px-6 py-2 rounded-xl font-semibold transition shadow-lg">
-                            <i class="fas fa-gift mr-2"></i> Claim Reward
-                        </button>` :
-                        `<button disabled class="bg-gray-600/50 px-6 py-2 rounded-xl font-semibold cursor-not-allowed">
-                            <i class="fas fa-check-circle mr-2"></i> Already Claimed
-                        </button>`
-                    }
-                </div>
-            `;
-            
-            const claimBtn = document.getElementById('claimDailyBtn');
-            if (claimBtn) claimBtn.addEventListener('click', () => claimDailyReward());
         }
         
         function updateDailyLoginDetailPage() {
@@ -1179,7 +1118,6 @@
             if (claimBtn) {
                 claimBtn.addEventListener('click', async () => {
                     await claimDailyReward();
-                    updateDailyLoginUI();
                     updateDailyLoginDetailPage();
                 });
             }
@@ -1222,7 +1160,7 @@
             if (!tbody) return;
             
             if (filtered.length === 0) { 
-                tbody.innerHTML = '<td><td colspan="6" class="text-center py-8 text-gray-400">Tidak ada transaksi</td></tr>'; 
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-400">Tidak ada transaksi</td></tr>'; 
                 return; 
             }
             
@@ -1533,7 +1471,6 @@
             renderAnalytics(); 
             renderLaporan(); 
             updatePlayerUI(); 
-            updateDailyLoginUI();
         }
         
         function setTheme(theme) {
@@ -1586,7 +1523,6 @@
             if (target) target.classList.remove('hidden');
             
             if (page === 'dashboard') {
-                updateDailyLoginUI();
                 updatePlayerUI();
                 renderSummaryAndTable();
             } else if (page === 'daily') {
