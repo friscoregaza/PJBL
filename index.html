@@ -235,7 +235,6 @@
 
     <div id="notificationContainer" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-3 pointer-events-none" style="min-width: 320px; max-width: 450px;"></div>
 
-    <!-- Loading Overlay -->
     <div id="loadingOverlay" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden">
         <div class="text-center">
             <i class="fas fa-spinner fa-spin text-4xl text-purple-400 mb-4"></i>
@@ -467,11 +466,10 @@
                     <div class="glass-card p-6">
                         <h3 class="font-semibold text-lg mb-4">Reward Streak</h3>
                         <div class="space-y-3">
-                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 1-2</span><span class="text-emerald-400">+1 Points</span></div>
-                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 3-6</span><span class="text-emerald-400">+2 Points</span></div>
-                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 7-9</span><span class="text-emerald-400">+4 Points</span></div>
-                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 10-13</span><span class="text-emerald-400">+6 Points</span></div>
-                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 14+</span><span class="text-emerald-400">+10 Points</span></div>
+                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 1-2</span><span class="text-emerald-400">+1 Point</span></div>
+                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 3-6</span><span class="text-emerald-400">+4 Points</span></div>
+                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 7-9</span><span class="text-emerald-400">+6 Points</span></div>
+                            <div class="flex justify-between p-3 bg-white/5 rounded-lg"><span>Hari 10+</span><span class="text-emerald-400">+10 Points</span></div>
                         </div>
                     </div>
                     <div class="glass-card p-6">
@@ -877,11 +875,11 @@
         async function checkAchievements() {
             if (!currentUser) return;
             let allTrans = currentUser.transactions || [];
-            let totalSave = allTrans.filter(t => t.kategori === 'Penghasilan' && t.jenis === 'pemasukan').reduce((a, b) => a + b.jumlah, 0);
             let achievementPoints = currentUser.achievementPoints || 0;
             let newBadges = [];
             let badgeAdded = false;
             
+            // Achievement berdasarkan Points (tanpa tabungan)
             if (achievementPoints >= 10 && !currentUser.badges.includes('points10')) {
                 currentUser.badges.push('points10');
                 newBadges.push('10 Achievement Points');
@@ -912,24 +910,8 @@
                 await addAchievementPoint(30);
                 badgeAdded = true;
             }
-            if (totalSave >= 100000 && !currentUser.badges.includes('target100k')) {
-                currentUser.badges.push('target100k');
-                newBadges.push('Capai 100K');
-                await addAchievementPoint(10);
-                badgeAdded = true;
-            }
-            if (totalSave >= 500000 && !currentUser.badges.includes('target500k')) {
-                currentUser.badges.push('target500k');
-                newBadges.push('Gacoan 500K');
-                await addAchievementPoint(15);
-                badgeAdded = true;
-            }
-            if (totalSave >= 1000000 && !currentUser.badges.includes('target1juta')) {
-                currentUser.badges.push('target1juta');
-                newBadges.push('1 Juta!');
-                await addAchievementPoint(25);
-                badgeAdded = true;
-            }
+            
+            // Badge Transaksi
             if (allTrans.length >= 10 && !currentUser.badges.includes('trans10')) {
                 currentUser.badges.push('trans10');
                 newBadges.push('10 Transaksi');
@@ -949,6 +931,7 @@
                 badgeAdded = true;
             }
             
+            // Badge Streak
             const dailyData = currentUser.dailyLogin;
             if (dailyData && dailyData.streak >= 7 && !currentUser.badges.includes('streak7')) {
                 currentUser.badges.push('streak7');
@@ -1003,7 +986,7 @@
             return currentUser ? currentUser.transactions || [] : [];
         }
         
-        // ========== DAILY LOGIN SYSTEM ==========
+        // ========== DAILY LOGIN SYSTEM (REWARD BARU) ==========
         async function claimDailyReward() {
             if (!currentUser) return false;
             
@@ -1035,23 +1018,26 @@
                 newStreak = 1;
             }
             
-            let rewardPoints = 5;
+            // REWARD SYSTEM BARU:
+            // Hari 1-2: 1 point
+            // Hari 3-6: 4 points
+            // Hari 7-9: 6 points
+            // Hari 10+: 10 points
+            let rewardPoints = 1;
             let rewardMessage = "";
             
-            if (newStreak >= 30) {
-                rewardPoints = 50;
-                rewardMessage = "Luar biasa! 30 hari streak! +50 Points!";
-            } else if (newStreak >= 14) {
-                rewardPoints = 25;
-                rewardMessage = "Hebat! 14 hari streak! +25 Points!";
-            } else if (newStreak >= 7) {
-                rewardPoints = 15;
-                rewardMessage = "Mantap! 7 hari streak! +15 Points!";
-            } else if (newStreak >= 3) {
+            if (newStreak >= 10) {
                 rewardPoints = 10;
-                rewardMessage = "Bagus! 3 hari streak! +10 Points!";
+                rewardMessage = `Streak ${newStreak} hari! +10 Points!`;
+            } else if (newStreak >= 7) {
+                rewardPoints = 6;
+                rewardMessage = `Streak ${newStreak} hari! +6 Points!`;
+            } else if (newStreak >= 3) {
+                rewardPoints = 4;
+                rewardMessage = `Streak ${newStreak} hari! +4 Points!`;
             } else {
-                rewardMessage = `Streak ${newStreak} hari! +5 Points!`;
+                rewardPoints = 1;
+                rewardMessage = `Streak ${newStreak} hari! +1 Point!`;
             }
             
             dailyData.lastLoginDate = new Date().toISOString();
@@ -1081,11 +1067,11 @@
             const today = new Date().toDateString();
             const canClaim = dailyData.lastClaimed !== today;
             
-            let nextReward = 5;
-            if (streak >= 14) nextReward = 10;
-            else if (streak >= 10) nextReward = 6;
-            else if (streak >= 6) nextReward = 4;
-            else if (streak >= 2) nextReward = 2;
+            let nextReward = 1;
+            if (streak >= 9) nextReward = 10;
+            else if (streak >= 6) nextReward = 6;
+            else if (streak >= 2) nextReward = 4;
+            else nextReward = 1;
             
             container.innerHTML = `
                 <div class="flex items-center justify-between flex-wrap gap-4">
@@ -1139,23 +1125,20 @@
             const today = new Date().toDateString();
             const canClaim = dailyData.lastClaimed !== today;
             
-            let nextReward = 5;
+            let nextReward = 1;
             let nextRewardDesc = "";
-            if (streak >= 14) {
+            if (streak >= 9) {
                 nextReward = 10;
-                nextRewardDesc = "14 Hari Streak! +10 Points";
-            } else if (streak >= 10) {
-                nextReward = 6;
-                nextRewardDesc = "10 Hari Streak! +6 Points";
+                nextRewardDesc = "10+ Hari Streak! +10 Points";
             } else if (streak >= 6) {
+                nextReward = 6;
+                nextRewardDesc = "7-9 Hari Streak! +6 Points";
+            } else if (streak >= 2) {
                 nextReward = 4;
-                nextRewardDesc = "6 Hari Streak! +4 Points";
-            } else if (streak >= 3) {
-                nextReward = 2;
-                nextRewardDesc = "3 Hari Streak! +2 Points";
+                nextRewardDesc = "3-6 Hari Streak! +4 Points";
             } else {
                 nextReward = 1;
-                nextRewardDesc = "1 Hari Streak! +1 Points";
+                nextRewardDesc = "1-2 Hari Streak! +1 Point";
             }
             
             container.innerHTML = `
@@ -1239,7 +1222,7 @@
             if (!tbody) return;
             
             if (filtered.length === 0) { 
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-400">Tidak ada transaksi</td></tr>'; 
+                tbody.innerHTML = '<td><td colspan="6" class="text-center py-8 text-gray-400">Tidak ada transaksi</td></tr>'; 
                 return; 
             }
             
@@ -1408,9 +1391,6 @@
                 { id: 'points100', name: '100 Points', icon: 'fa-gem', desc: 'Kumpulkan 100 Achievement Points' },
                 { id: 'points200', name: '200 Points', icon: 'fa-crown', desc: 'Kumpulkan 200 Achievement Points' },
                 { id: 'points500', name: '500 Points', icon: 'fa-trophy', desc: 'Kumpulkan 500 Achievement Points - Master!' },
-                { id: 'target100k', name: 'Target 100K', icon: 'fa-bullseye', desc: 'Total tabungan 100rb' },
-                { id: 'target500k', name: 'Gacoan 500K', icon: 'fa-money-bill-wave', desc: 'Total tabungan 500rb' },
-                { id: 'target1juta', name: '1 Juta!', icon: 'fa-sack-dollar', desc: 'Total tabungan 1 juta' },
                 { id: 'trans10', name: '10 Transaksi', icon: 'fa-chart-line', desc: 'Melakukan 10 transaksi' },
                 { id: 'trans50', name: '50 Transaksi', icon: 'fa-chart-simple', desc: 'Melakukan 50 transaksi' },
                 { id: 'trans100', name: '100 Transaksi', icon: 'fa-chart-line', desc: 'Melakukan 100 transaksi - Pro!' },
@@ -1537,7 +1517,7 @@
             let tbody = document.getElementById('laporanTableBody');
             if (!tbody) return;
             
-            if(filtered.length===0) { tbody.innerHTML = '<td><td colspan="5" class="text-center py-8">Tidak ada data</td></tr>'; return; }
+            if(filtered.length===0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8">Tidak ada数据</td></tr>'; return; }
             
             let html = '';
             filtered.sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal)).forEach(t=>{
@@ -1624,7 +1604,7 @@
             if (active) active.classList.add('active');
         }
         
-        // ========== IMPORT FUNCTIONS (SUPPORT JSON, CSV, EXCEL, TXT) ==========
+        // ========== IMPORT FUNCTIONS ==========
         function parseAmount(value) {
             if (value === undefined || value === null || value === '') return 0;
             if (typeof value === 'number') return Math.abs(value);
@@ -1674,7 +1654,7 @@
                 const hasRequired = requiredFields.every(f => headers.includes(f));
                 
                 if (!hasRequired) {
-                    return { success: false, message: "CSV harus memiliki kolom: tanggal, jumlah (dan opsional: deskripsi, kategori, jenis)" };
+                    return { success: false, message: "CSV harus memiliki kolom: tanggal, jumlah" };
                 }
                 
                 let transactions = [];
@@ -2149,7 +2129,7 @@
                 });
             }
             
-            // ========== IMPORT DATA (SUPPORT JSON, CSV, EXCEL, TXT) ==========
+            // Import Data
             const importBtn = document.getElementById('importDataBtn');
             if (importBtn) importBtn.addEventListener('click', () => {
                 const importFileInput = document.getElementById('importFileInput');
@@ -2172,24 +2152,21 @@
                                 
                                 showNotification('Info', `Memproses file ${fileName}...`, 'info', true, 2000);
                                 
-                                // Pilih fungsi import berdasarkan ekstensi file
                                 if (ext === 'json') {
                                     result = importFromJSON(content);
                                 } else if (ext === 'csv') {
                                     result = importFromCSV(content);
                                 } else if (ext === 'xlsx' || ext === 'xls') {
-                                    // Untuk file Excel, perlu diolah sebagai array buffer
                                     if (content instanceof ArrayBuffer) {
                                         result = importFromExcel(content);
                                     } else {
-                                        // Jika tidak, baca ulang sebagai array buffer
                                         const arrayBuffer = await file.arrayBuffer();
                                         result = importFromExcel(arrayBuffer);
                                     }
                                 } else if (ext === 'txt') {
                                     result = importFromTXT(content);
                                 } else {
-                                    showNotification('Gagal!', `Format .${ext} tidak didukung. Gunakan: JSON, CSV, Excel, atau TXT`, 'error', true, 4000);
+                                    showNotification('Gagal!', `Format .${ext} tidak didukung`, 'error', true, 4000);
                                     return;
                                 }
                                 
@@ -2206,12 +2183,10 @@
                                 console.error('Import error:', err);
                                 showNotification('Gagal!', 'Terjadi kesalahan saat membaca file: ' + err.message, 'error', true, 5000); 
                             } finally {
-                                // Reset input file
                                 importFileInput.value = '';
                             } 
                         };
                         
-                        // Baca file sesuai tipe
                         if (ext === 'xlsx' || ext === 'xls') {
                             reader.readAsArrayBuffer(file);
                         } else {
