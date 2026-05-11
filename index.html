@@ -1082,10 +1082,10 @@
             const canClaim = dailyData.lastClaimed !== today;
             
             let nextReward = 5;
-            if (streak >= 29) nextReward = 50;
-            else if (streak >= 13) nextReward = 25;
-            else if (streak >= 6) nextReward = 15;
-            else if (streak >= 2) nextReward = 10;
+            if (streak >= 14) nextReward = 10;
+            else if (streak >= 10) nextReward = 6;
+            else if (streak >= 6) nextReward = 4;
+            else if (streak >= 2) nextReward = 2;
             
             container.innerHTML = `
                 <div class="flex items-center justify-between flex-wrap gap-4">
@@ -1141,21 +1141,21 @@
             
             let nextReward = 5;
             let nextRewardDesc = "";
-            if (streak >= 29) {
-                nextReward = 50;
-                nextRewardDesc = "30 Hari Streak! +50 Points";
-            } else if (streak >= 13) {
-                nextReward = 25;
-                nextRewardDesc = "14 Hari Streak! +25 Points";
-            } else if (streak >= 6) {
-                nextReward = 15;
-                nextRewardDesc = "7 Hari Streak! +15 Points";
-            } else if (streak >= 2) {
+            if (streak >= 14) {
                 nextReward = 10;
-                nextRewardDesc = "3 Hari Streak! +10 Points";
+                nextRewardDesc = "14 Hari Streak! +10 Points";
+            } else if (streak >= 10) {
+                nextReward = 6;
+                nextRewardDesc = "10 Hari Streak! +6 Points";
+            } else if (streak >= 6) {
+                nextReward = 4;
+                nextRewardDesc = "6 Hari Streak! +4 Points";
+            } else if (streak >= 3) {
+                nextReward = 2;
+                nextRewardDesc = "3 Hari Streak! +2 Points";
             } else {
-                nextReward = 5;
-                nextRewardDesc = "1 Hari Streak! +5 Points";
+                nextReward = 1;
+                nextRewardDesc = "1 Hari Streak! +1 Points";
             }
             
             container.innerHTML = `
