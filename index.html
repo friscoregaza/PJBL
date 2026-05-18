@@ -304,7 +304,7 @@
 <body class="theme-dark">
 
     <!-- Mobile Menu Toggle Button -->
-    <button class="menu-toggle" id="menuToggle">
+    <button class="menu-toggle" id="menuToggle" style="display: none;">
         <i class="fas fa-bars text-white text-xl"></i>
     </button>
 
@@ -378,7 +378,7 @@
     </div>
 
     <!-- Mobile Sidebar -->
-    <div class="mobile-sidebar glass-card rounded-none border-l-0 border-t-0 border-b-0" id="mobileSidebar">
+    <div class="mobile-sidebar glass-card rounded-none border-l-0 border-t-0 border-b-0" id="mobileSidebar" style="display: none;">
         <div class="p-6 flex flex-col h-full">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-3">
@@ -644,7 +644,7 @@
             
             <div class="glass-card p-5 mb-8">
                 <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-                    <h3 class="font-semibold">Perbandingan Pemasukan & Pengeluaran</h3>
+                    <h3 class="font-semibold">Perbandingan Pemasukan dan Pengeluaran</h3>
                     <select id="analyticsTimeRange" class="bg-black/30 border border-purple-500/30 rounded-lg px-3 py-1.5 text-sm">
                         <option value="week">Minggu Ini</option>
                         <option value="month">Bulan Ini</option>
@@ -888,7 +888,7 @@
         function showAchievementFloat(amount, element) {
             let floatDiv = document.createElement('div');
             floatDiv.className = 'achievement-float';
-            floatDiv.innerHTML = amount > 0 ? `✨ +${amount} Points ✨` : `💔 ${amount} Points 💔`;
+            floatDiv.innerHTML = amount > 0 ? `✨ +${amount} Poin ✨` : `💔 ${amount} Poin 💔`;
             floatDiv.style.color = amount > 0 ? '#f59e0b' : '#f43f5e';
             if (element) {
                 const rect = element.getBoundingClientRect();
@@ -1036,31 +1036,31 @@
             
             if (achievementPoints >= 10 && !currentUser.badges.includes('points10')) {
                 currentUser.badges.push('points10');
-                newBadges.push('10 Achievement Points');
+                newBadges.push('10 Achievement Poin');
                 await addAchievementPoint(5);
                 badgeAdded = true;
             }
             if (achievementPoints >= 50 && !currentUser.badges.includes('points50')) {
                 currentUser.badges.push('points50');
-                newBadges.push('50 Achievement Points');
+                newBadges.push('50 Achievement Poin');
                 await addAchievementPoint(10);
                 badgeAdded = true;
             }
             if (achievementPoints >= 100 && !currentUser.badges.includes('points100')) {
                 currentUser.badges.push('points100');
-                newBadges.push('100 Achievement Points');
+                newBadges.push('100 Achievement Poin');
                 await addAchievementPoint(15);
                 badgeAdded = true;
             }
             if (achievementPoints >= 200 && !currentUser.badges.includes('points200')) {
                 currentUser.badges.push('points200');
-                newBadges.push('200 Achievement Points');
+                newBadges.push('200 Achievement Poin');
                 await addAchievementPoint(20);
                 badgeAdded = true;
             }
             if (achievementPoints >= 500 && !currentUser.badges.includes('points500')) {
                 currentUser.badges.push('points500');
-                newBadges.push('500 Achievement Points - Master!');
+                newBadges.push('500 Achievement Poin - Master!');
                 await addAchievementPoint(30);
                 badgeAdded = true;
             }
@@ -1523,7 +1523,7 @@
             if (insightTrendText) insightTrendText.innerHTML = trendText;
             
             let totalPengeluaran = all.filter(t=>t.jenis==='pengeluaran').reduce((a,b)=>a+b.jumlah,0);
-            let status = totalPengeluaran > totalPemasukan ? '⚠️ Pengeluaran > Pemasukan! Evaluasi.' : '✅ Sehat, pemasukan mencukupi.';
+            let status = totalPengeluaran > totalPemasukan ? 'Peringatan: Pengeluaran lebih besar dari Pemasukan! Evaluasi.' : 'Sehat: Pemasukan mencukupi.';
             
             const insightBorosText = document.getElementById('insightBorosText');
             if (insightBorosText) insightBorosText.innerHTML = status;
@@ -1632,7 +1632,9 @@
                 localStorage.setItem('theme', 'light');
                 const themeText = document.getElementById('themeText');
                 const themeToggleIcon = document.querySelector('#themeToggle i');
+                const mobileThemeText = document.querySelector('#mobileThemeToggle span');
                 if (themeText) themeText.innerText = 'Dark Mode';
+                if (mobileThemeText) mobileThemeText.innerText = 'Dark Mode';
                 if (themeToggleIcon) themeToggleIcon.className = 'fas fa-moon';
             } else {
                 document.body.classList.remove('theme-light');
@@ -1640,7 +1642,9 @@
                 localStorage.setItem('theme', 'dark');
                 const themeText = document.getElementById('themeText');
                 const themeToggleIcon = document.querySelector('#themeToggle i');
+                const mobileThemeText = document.querySelector('#mobileThemeToggle span');
                 if (themeText) themeText.innerText = 'Light Mode';
+                if (mobileThemeText) mobileThemeText.innerText = 'Light Mode';
                 if (themeToggleIcon) themeToggleIcon.className = 'fas fa-sun';
             }
             const newTheme = theme === 'light' ? 'light' : 'dark';
@@ -1688,8 +1692,10 @@
             }
             
             // Close mobile sidebar after page change
-            document.getElementById('mobileSidebar')?.classList.remove('open');
-            document.getElementById('sidebarOverlay')?.classList.remove('show');
+            const mobileSidebar = document.getElementById('mobileSidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            if (mobileSidebar) mobileSidebar.classList.remove('open');
+            if (sidebarOverlay) sidebarOverlay.classList.remove('show');
             
             document.querySelectorAll('.menu-item').forEach(menu => menu.classList.remove('active'));
             const active = document.querySelector(`.menu-item[data-page="${page}"]`);
@@ -1962,6 +1968,20 @@
             const sidebarOverlay = document.getElementById('sidebarOverlay');
             const closeSidebarBtn = document.getElementById('closeSidebarBtn');
             
+            // Sembunyikan menu toggle dan sidebar mobile di desktop
+            function checkScreenSize() {
+                if (window.innerWidth <= 1024) {
+                    if (menuToggle) menuToggle.style.display = 'block';
+                    if (mobileSidebar) mobileSidebar.style.display = 'block';
+                } else {
+                    if (menuToggle) menuToggle.style.display = 'none';
+                    if (mobileSidebar) mobileSidebar.style.display = 'none';
+                }
+            }
+            
+            checkScreenSize();
+            window.addEventListener('resize', checkScreenSize);
+            
             if (menuToggle) {
                 menuToggle.addEventListener('click', () => {
                     mobileSidebar.classList.add('open');
@@ -2025,19 +2045,13 @@
             const themeToggle = document.getElementById('themeToggle');
             const mobileThemeToggle = document.getElementById('mobileThemeToggle');
             
-            if (themeToggle) {
-                themeToggle.addEventListener('click', () => { 
-                    const isLight = document.body.classList.contains('theme-light'); 
-                    setTheme(isLight ? 'dark' : 'light'); 
-                });
-            }
+            const toggleThemeHandler = () => { 
+                const isLight = document.body.classList.contains('theme-light'); 
+                setTheme(isLight ? 'dark' : 'light'); 
+            };
             
-            if (mobileThemeToggle) {
-                mobileThemeToggle.addEventListener('click', () => { 
-                    const isLight = document.body.classList.contains('theme-light'); 
-                    setTheme(isLight ? 'dark' : 'light'); 
-                });
-            }
+            if (themeToggle) themeToggle.addEventListener('click', toggleThemeHandler);
+            if (mobileThemeToggle) mobileThemeToggle.addEventListener('click', toggleThemeHandler);
             
             // Login Submit
             const loginFormEl = document.getElementById('loginForm');
@@ -2138,8 +2152,10 @@
                 showNotification('Sampai Jumpa!', 'Anda telah logout', 'info', true, 3000);
                 
                 // Close mobile sidebar
-                document.getElementById('mobileSidebar')?.classList.remove('open');
-                document.getElementById('sidebarOverlay')?.classList.remove('show');
+                const mobileSidebar = document.getElementById('mobileSidebar');
+                const sidebarOverlay = document.getElementById('sidebarOverlay');
+                if (mobileSidebar) mobileSidebar.classList.remove('open');
+                if (sidebarOverlay) sidebarOverlay.classList.remove('show');
             };
             
             if (logoutBtn) logoutBtn.addEventListener('click', logoutHandler);
@@ -2215,7 +2231,7 @@
                             link.download = fileName + '.json';
                             link.click();
                             URL.revokeObjectURL(link.href);
-                            showNotification('Success', `Export ${data.length} transaksi ke JSON`, 'success', true, 3000);
+                            showNotification('Sukses', `Export ${data.length} transaksi ke JSON`, 'success', true, 3000);
                         } else if (format === 'csv') {
                             let headers = Object.keys(data[0]);
                             let csvRows = [headers.join(',')];
@@ -2235,9 +2251,9 @@
                             link.download = fileName + '.csv';
                             link.click();
                             URL.revokeObjectURL(link.href);
-                            showNotification('Success', `Export ${data.length} transaksi ke CSV`, 'success', true, 3000);
+                            showNotification('Sukses', `Export ${data.length} transaksi ke CSV`, 'success', true, 3000);
                         } else if (format === 'txt') {
-                            let txt = '=== LAPORAN KEUANGAN ===\n';
+                            let txt = 'LAPORAN KEUANGAN\n';
                             txt += `Tanggal: ${new Date().toLocaleString()}\n`;
                             txt += `Total: ${data.length} transaksi\n`;
                             txt += '='.repeat(40) + '\n\n';
@@ -2253,7 +2269,7 @@
                             link.download = fileName + '.txt';
                             link.click();
                             URL.revokeObjectURL(link.href);
-                            showNotification('Success', `Export ${data.length} transaksi ke TXT`, 'success', true, 3000);
+                            showNotification('Sukses', `Export ${data.length} transaksi ke TXT`, 'success', true, 3000);
                         } else if (format === 'excel') {
                             if (typeof XLSX === 'undefined') {
                                 showNotification('Error', 'Library Excel tidak tersedia!', 'error', true, 3000);
@@ -2263,7 +2279,7 @@
                             let wb = XLSX.utils.book_new();
                             XLSX.utils.book_append_sheet(wb, ws, 'Keuangan');
                             XLSX.writeFile(wb, fileName + '.xlsx');
-                            showNotification('Success', `Export ${data.length} transaksi ke Excel`, 'success', true, 3000);
+                            showNotification('Sukses', `Export ${data.length} transaksi ke Excel`, 'success', true, 3000);
                         }
                     } catch (error) {
                         showNotification('Error', 'Gagal export: ' + error.message, 'error', true, 3000);
@@ -2431,7 +2447,7 @@
                     const confirmModal = document.getElementById('confirmModal');
                     const confirmOkBtn = document.getElementById('confirmOkBtn');
                     if (confirmTitle) confirmTitle.innerText = 'Reset Transaksi Saja';
-                    if (confirmMessage) confirmMessage.innerHTML = 'Yakin reset SEMUA transaksi? Poin & badge tetap ada!';
+                    if (confirmMessage) confirmMessage.innerHTML = 'Yakin reset SEMUA transaksi? Poin dan badge tetap ada!';
                     if (confirmModal) confirmModal.classList.remove('hidden');
                     if (confirmOkBtn) {
                         confirmOkBtn.onclick = async () => {
